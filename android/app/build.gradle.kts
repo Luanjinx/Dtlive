@@ -16,7 +16,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.example.yourappname"
+    namespace = "com.moviestream.android"
     compileSdk = 36
     ndkVersion = "28.2.13676358"
 
@@ -33,7 +33,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.yourappname"
+        applicationId = "com.moviestream.android"
         minSdk = 25
         targetSdk = 35
         versionCode = 1

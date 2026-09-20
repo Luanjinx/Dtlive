@@ -41,54 +41,55 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDtOUk23PrTjn_CXbMf36CRcOK7LnHYGos',
-    appId: '1:946063364931:web:2c9415841519ebab57d5f6',
-    messagingSenderId: '946063364931',
-    projectId: 'yourappname-9aca3',
-    authDomain: 'yourappname-9aca3.firebaseapp.com',
-    storageBucket: 'yourappname-9aca3.firebasestorage.app',
+    apiKey: 'AIzaSyC2eVS53c4LPHM3e_Yd1sLTtyVvA63Mb4M',
+    appId: '1:988658912152:web:bf6c4aa65f02886e7bf9ed',
+    messagingSenderId: '988658912152',
+    projectId: 'streamit-5ef16',
+    authDomain: 'streamit-5ef16.firebaseapp.com',
+    databaseURL: 'https://streamit-5ef16-default-rtdb.firebaseio.com',
+    storageBucket: 'streamit-5ef16.firebasestorage.app',
+    measurementId: 'G-YEC2R15CR1',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAORaonzstIpKxEcvdT14tr44nKnJzO0Co',
-    appId: '1:946063364931:android:cd523b5793563a3257d5f6',
-    messagingSenderId: '946063364931',
-    projectId: 'yourappname-9aca3',
-    storageBucket: 'yourappname-9aca3.firebasestorage.app',
+    apiKey: 'AIzaSyCsJLRihuO-i2cMfJeB7lLeCJ158e8yeFk',
+    appId: '1:988658912152:android:b003f97916b3e6667bf9ed',
+    messagingSenderId: '988658912152',
+    projectId: 'streamit-5ef16',
+    databaseURL: 'https://streamit-5ef16-default-rtdb.firebaseio.com',
+    storageBucket: 'streamit-5ef16.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDv8lz2mfppOZhU4AH9F2pWx3Os6IcoACg',
-    appId: '1:946063364931:ios:7b130569ab62d92257d5f6',
-    messagingSenderId: '946063364931',
-    projectId: 'yourappname-9aca3',
-    storageBucket: 'yourappname-9aca3.firebasestorage.app',
-    androidClientId:
-        '946063364931-0tvpgi5e3p1h4joss2kso187lolk2qen.apps.googleusercontent.com',
-    iosClientId:
-        '946063364931-mf45cskfiqtc63namugb7n5usvgm8vkq.apps.googleusercontent.com',
-    iosBundleId: 'com.example.yourappname',
+    apiKey: 'AIzaSyALJRlUFbCsnlE_u6jBiSebNgeq86V4gps',
+    appId: '1:988658912152:ios:bc8499ae522fa3357bf9ed',
+    messagingSenderId: '988658912152',
+    projectId: 'streamit-5ef16',
+    databaseURL: 'https://streamit-5ef16-default-rtdb.firebaseio.com',
+    storageBucket: 'streamit-5ef16.firebasestorage.app',
+    androidClientId: '988658912152-78q6biuf9lklfb4tmju9f303bn0cdm4i.apps.googleusercontent.com',
+    iosClientId: '988658912152-umbjicbirfpkdh6stjdnvr2vn5pjtmk2.apps.googleusercontent.com',
+    iosBundleId: 'com.moviestream.ios',
   );
-
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDv8lz2mfppOZhU4AH9F2pWx3Os6IcoACg',
-    appId: '1:946063364931:ios:7b130569ab62d92257d5f6',
-    messagingSenderId: '946063364931',
-    projectId: 'yourappname-9aca3',
-    storageBucket: 'yourappname-9aca3.firebasestorage.app',
-    androidClientId:
-        '946063364931-0tvpgi5e3p1h4joss2kso187lolk2qen.apps.googleusercontent.com',
-    iosClientId:
-        '946063364931-mf45cskfiqtc63namugb7n5usvgm8vkq.apps.googleusercontent.com',
-    iosBundleId: 'com.example.yourappname',
+    apiKey: 'AIzaSyALJRlUFbCsnlE_u6jBiSebNgeq86V4gps',
+    appId: '1:988658912152:ios:4b9c500c230b36e27bf9ed',
+    messagingSenderId: '988658912152',
+    projectId: 'streamit-5ef16',
+    databaseURL: 'https://streamit-5ef16-default-rtdb.firebaseio.com',
+    storageBucket: 'streamit-5ef16.firebasestorage.app',
+    androidClientId: '988658912152-78q6biuf9lklfb4tmju9f303bn0cdm4i.apps.googleusercontent.com',
+    iosClientId: '988658912152-muce2ope94qvtneaubdetmqgsr4me2gp.apps.googleusercontent.com',
+    iosBundleId: 'com.moviestream.macos',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyDtOUk23PrTjn_CXbMf36CRcOK7LnHYGos',
-    appId: '1:946063364931:web:b77a759b6b9df96757d5f6',
-    messagingSenderId: '946063364931',
-    projectId: 'yourappname-9aca3',
-    authDomain: 'yourappname-9aca3.firebaseapp.com',
-    storageBucket: 'yourappname-9aca3.firebasestorage.app',
+    apiKey: 'AIzaSyC2eVS53c4LPHM3e_Yd1sLTtyVvA63Mb4M',
+    appId: '1:988658912152:web:57e56ab96f10cff17bf9ed',
+    messagingSenderId: '988658912152',
+    projectId: 'streamit-5ef16',
+    authDomain: 'streamit-5ef16.firebaseapp.com',
+    databaseURL: 'https://streamit-5ef16-default-rtdb.firebaseio.com',
+    storageBucket: 'streamit-5ef16.firebasestorage.app',
+    measurementId: 'G-84B5NC2BPQ',
   );
 }

@@ -7,9 +7,9 @@ class Constant {
   static String apiToken =
       'Enter your API Token...'; // Replace with your API Token (Get from Admin panel)
 
-  static String appName = "yourappname";
+  static String appName = "Moviestream";
   static String appPackageName =
-      "com.example.yourappname"; // This is used for PIP channel
+      "com.moviestream.android"; // This is used for PIP channel
   static String appleAppId = ""; // This is used for Appstore iOS App redirect
   static String appVersion = "";
 
