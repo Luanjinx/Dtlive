@@ -3,9 +3,9 @@ import '../model/subtitlemodel.dart';
 
 class Constant {
   static String baseUrl =
-      'Enter your API url...'; // Replace with your API Path (Get from Admin panel)
+      'http://nexstream.biz.id/public/api/'; // Replace with your API Path (Get from Admin panel)
   static String apiToken =
-      'Enter your API Token...'; // Replace with your API Token (Get from Admin panel)
+      'DTLdcFLx12g5MIGu7deMJIJQTD56qcZx'; // Replace with your API Token (Get from Admin panel)
 
   static String appName = "Moviestream";
   static String appPackageName =
