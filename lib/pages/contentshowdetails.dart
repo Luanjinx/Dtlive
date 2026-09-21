@@ -2214,7 +2214,9 @@ class ContentShowDetailsState extends State<ContentShowDetails>
   Future<void> openPlayer(String playType) async {
     printLog("mCurrentEpiPos ========> ${showDetailsProvider.mCurrentEpiPos}");
     if ((episodeProvider.episodeList?.length ?? 0) > 0) {
-      if (showDetailsProvider.mCurrentEpiPos == -1) return;
+      if (showDetailsProvider.mCurrentEpiPos == -1) {
+        showDetailsProvider.mCurrentEpiPos = 0;
+      }
       /* CHECK SUBSCRIPTION */
       if (playType != "Trailer") {
         bool? isPrimiumUser = await Utils.checkSubsRentLogin(
