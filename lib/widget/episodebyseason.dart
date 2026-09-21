@@ -1407,6 +1407,9 @@ class _EpisodeBySeasonState extends State<EpisodeBySeason> {
       String? vUploadType = (episodeList?[epiPos].videoUploadType ?? "");
       String? videoThumb = (episodeList?[epiPos].landscape ?? "");
       String? epiUrl = (episodeList?[epiPos].video320 ?? "");
+      if (epiUrl.isEmpty) epiUrl = (episodeList?[epiPos].video480 ?? "");
+      if (epiUrl.isEmpty) epiUrl = (episodeList?[epiPos].video720 ?? "");
+      if (epiUrl.isEmpty) epiUrl = (episodeList?[epiPos].video1080 ?? "");
       printLog("epiID ========> $epiID");
       printLog("showID =======> $showID");
       printLog("vType ========> $vType");
