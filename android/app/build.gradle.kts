@@ -100,7 +100,7 @@ android {
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:2.3.20")
     implementation("com.google.android.material:material:1.12.0")
-    implementation("com.android.support:multidex:2.0.1")
+    implementation("androidx.multidex:multidex:2.0.1")
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 
