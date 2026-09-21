@@ -2354,6 +2354,24 @@ class ContentShowDetailsState extends State<ContentShowDetails>
                 .episodeList?[showDetailsProvider.mCurrentEpiPos]
                 .video320 ??
             "");
+        if (vUrl.isEmpty) {
+          vUrl = (episodeProvider
+                  .episodeList?[showDetailsProvider.mCurrentEpiPos]
+                  .video480 ??
+              "");
+        }
+        if (vUrl.isEmpty) {
+          vUrl = (episodeProvider
+                  .episodeList?[showDetailsProvider.mCurrentEpiPos]
+                  .video720 ??
+              "");
+        }
+        if (vUrl.isEmpty) {
+          vUrl = (episodeProvider
+                  .episodeList?[showDetailsProvider.mCurrentEpiPos]
+                  .video1080 ??
+              "");
+        }
         vUploadType =
             (episodeProvider
                 .episodeList?[showDetailsProvider.mCurrentEpiPos]
