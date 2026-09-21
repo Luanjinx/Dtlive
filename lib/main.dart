@@ -540,7 +540,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                       for (final platform in TargetPlatform.values)
                         platform: const NoTransitionsBuilder(),
                     }
-                  : const {
+                  : <TargetPlatform, PageTransitionsBuilder>{
                       TargetPlatform.android: ZoomPageTransitionsBuilder(),
                       TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
                     },
