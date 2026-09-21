@@ -1051,9 +1051,7 @@ class HomeState extends State<Home> {
         options: CarouselOptions(
           initialPage: 0,
           height: Dimens.getBannerHeight(context),
-          enlargeCenterPage: true,
-          enlargeFactor: 0.2,
-          enlargeStrategy: CenterPageEnlargeStrategy.scale,
+          enlargeCenterPage: false,
           enableInfiniteScroll: list.length > 1,
           autoPlay: true,
           autoPlayCurve: Curves.easeInOutCubic,
@@ -1061,7 +1059,7 @@ class HomeState extends State<Home> {
           autoPlayAnimationDuration: Duration(
             milliseconds: Constant.animationDuration,
           ),
-          viewportFraction: 0.8,
+          viewportFraction: 0.95,
           padEnds: true,
           onPageChanged: (val, _) async {
             sectionDataProvider.setCurrentBanner(val);
@@ -1135,45 +1133,82 @@ class HomeState extends State<Home> {
                     left: 14,
                     child: _buildBannerBadge(list[index]),
                   ),
-                  /* Title + Metadata — bottom-left :: Action buttons — bottom-right */
+                  /* Title + Metadata + Action buttons — center-bottom */
                   Positioned(
                     left: 14,
                     right: 14,
-                    bottom: 10,
-                    child: Row(
+                    bottom: 20,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              MyText(
-                                color: white,
-                                text: (list[index].name ?? "").isNotEmpty
-                                    ? (list[index].name ?? "")
-                                    : "-",
-                                textalign: TextAlign.start,
-                                fontsizeNormal: 24,
-                                fontsizeWeb: 26,
-                                fontweight: FontWeight.w800,
-                                multilanguage: false,
-                                maxline: 2,
-                                overflow: TextOverflow.ellipsis,
-                                fontstyle: FontStyle.normal,
-                                isShadowText: true,
-                              ),
-                              const SizedBox(height: 3),
-                              _buildBannerMetaRow(list[index]),
-                            ],
-                          ),
+                        MyText(
+                          color: white,
+                          text: (list[index].name ?? "").isNotEmpty
+                              ? (list[index].name ?? "")
+                              : "-",
+                          textalign: TextAlign.center,
+                          fontsizeNormal: 24,
+                          fontsizeWeb: 26,
+                          fontweight: FontWeight.w800,
+                          multilanguage: false,
+                          maxline: 2,
+                          overflow: TextOverflow.ellipsis,
+                          fontstyle: FontStyle.normal,
+                          isShadowText: true,
                         ),
-                        const SizedBox(width: 10),
-                        Column(
+                        const SizedBox(height: 6),
+                        _buildBannerMetaRow(list[index]),
+                        const SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            // Watch Button
+                            InkWell(
+                              onTap: () {
+                                openDetailPage(
+                                  list[index].id ?? 0,
+                                  list[index].subVideoType ?? 0,
+                                  list[index].videoType ?? 0,
+                                  list[index].typeId ?? 0,
+                                );
+                              },
+                              borderRadius: BorderRadius.circular(8),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 24, vertical: 12),
+                                decoration: BoxDecoration(
+                                  color: white.withValues(alpha: 0.20),
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                      color: white.withValues(alpha: 0.10),
+                                      width: 1),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    MyImage(
+                                      imagePath: "ic_play.png",
+                                      color: white,
+                                      width: 16,
+                                      height: 16,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    MyText(
+                                      color: white,
+                                      text: "Watch",
+                                      multilanguage: false,
+                                      fontsizeNormal: 14,
+                                      fontweight: FontWeight.w700,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                             if (!isLive) ...[
-                              _buildBannerCircleBtn(
-                                iconPath: (list[index].isBookmark ?? 0) == 1
-                                    ? "ic_tick.png"
-                                    : "ic_plus.png",
+                              const SizedBox(width: 12),
+                              // Bookmark Button
+                              InkWell(
                                 onTap: () async {
                                   if (Constant.userID != null) {
                                     await sectionDataProvider.setBookMark(
@@ -1187,20 +1222,28 @@ class HomeState extends State<Home> {
                                     );
                                   }
                                 },
+                                borderRadius: BorderRadius.circular(8),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 14, vertical: 12),
+                                  decoration: BoxDecoration(
+                                    color: white.withValues(alpha: 0.20),
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                        color: white.withValues(alpha: 0.10),
+                                        width: 1),
+                                  ),
+                                  child: MyImage(
+                                    imagePath: (list[index].isBookmark ?? 0) == 1
+                                        ? "ic_tick.png"
+                                        : "ic_plus.png",
+                                    color: white,
+                                    width: 16,
+                                    height: 16,
+                                  ),
+                                ),
                               ),
-                              const SizedBox(height: 8),
                             ],
-                            _buildBannerCircleBtn(
-                              iconPath: "ic_play.png",
-                              onTap: () {
-                                openDetailPage(
-                                  list[index].id ?? 0,
-                                  list[index].subVideoType ?? 0,
-                                  list[index].videoType ?? 0,
-                                  list[index].typeId ?? 0,
-                                );
-                              },
-                            ),
                           ],
                         ),
                       ],
@@ -1291,7 +1334,7 @@ class HomeState extends State<Home> {
     return MyText(
       color: white.withValues(alpha: 0.75),
       text: parts.join("  •  "),
-      textalign: TextAlign.start,
+      textalign: TextAlign.center,
       fontsizeNormal: 12,
       fontsizeWeb: 14,
       fontweight: FontWeight.w500,
