@@ -234,8 +234,20 @@ class MySpaceState extends State<MySpace> with RouteAware {
           ? (continueWatchingList?[position].episode?.id ?? 0)
           : 0,
       videoUrl: (continueWatchingList?[position].episode != null)
-          ? (continueWatchingList?[position].episode?.video320 ?? "")
-          : (continueWatchingList?[position].video320 ?? ""),
+          ? ((continueWatchingList?[position].episode?.video320 ?? "").isNotEmpty
+              ? (continueWatchingList?[position].episode?.video320 ?? "")
+              : (continueWatchingList?[position].episode?.video480 ?? "").isNotEmpty
+                  ? (continueWatchingList?[position].episode?.video480 ?? "")
+                  : (continueWatchingList?[position].episode?.video720 ?? "").isNotEmpty
+                      ? (continueWatchingList?[position].episode?.video720 ?? "")
+                      : (continueWatchingList?[position].episode?.video1080 ?? ""))
+          : ((continueWatchingList?[position].video320 ?? "").isNotEmpty
+              ? (continueWatchingList?[position].video320 ?? "")
+              : (continueWatchingList?[position].video480 ?? "").isNotEmpty
+                  ? (continueWatchingList?[position].video480 ?? "")
+                  : (continueWatchingList?[position].video720 ?? "").isNotEmpty
+                      ? (continueWatchingList?[position].video720 ?? "")
+                      : (continueWatchingList?[position].video1080 ?? "")),
       cipherMediaDetails:
           (vdocipherDetails != null && vdocipherDetails.result != null)
           ? (vdocipherDetails.result)
