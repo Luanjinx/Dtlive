@@ -1014,7 +1014,10 @@ class HomeState extends State<Home> {
   Widget _mobileHomeBanner(List<banner.Result>? sectionBannerList) {
     if ((sectionBannerList?.length ?? 0) == 0) return const SizedBox.shrink();
     final list = sectionBannerList!;
-    return SizedBox(
+    
+    // 1. DI SINI UBAHNYA: Pakai Container dan kasih margin top biar agak turun
+    return Container(
+      margin: const EdgeInsets.only(top: 20), // <-- Atur angka 20 ini kalau kurang turun/kurang naik
       height: Dimens.getBannerHeight(context),
       child: CarouselSlider.builder(
         itemCount: list.length,
@@ -1030,7 +1033,10 @@ class HomeState extends State<Home> {
           autoPlayAnimationDuration: Duration(
             milliseconds: Constant.animationDuration,
           ),
-          viewportFraction: 0.95,
+          
+          // 2. DI SINI UBAHNYA: viewportFraction jadi 1.0 biar mentok kiri kanan
+          viewportFraction: 1.0, 
+          
           padEnds: true,
           onPageChanged: (val, _) async {
             sectionDataProvider.setCurrentBanner(val);
@@ -1046,11 +1052,14 @@ class HomeState extends State<Home> {
           final isLive =
               (list[index].videoUploadType ?? "") == "live_stream_url";
           return ClipRRect(
-            borderRadius: BorderRadius.circular(16),
+            
+            // 3. DI SINI UBAHNYA: borderRadius jadi 0 biar sudutnya nggak melengkung saat layar full
+            borderRadius: BorderRadius.circular(0), 
+            
             clipBehavior: Clip.antiAliasWithSaveLayer,
             child: InkWell(
               focusColor: white,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(0), // <-- Ini juga dinolin aja
               onTap: () {
                 openDetailPage(
                   list[index].id ?? 0,
