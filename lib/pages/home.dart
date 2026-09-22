@@ -367,8 +367,20 @@ class HomeState extends State<Home> {
           ? (continueWatchingList?[position].episode?.id ?? 0)
           : 0,
       videoUrl: (continueWatchingList?[position].episode != null)
-          ? (continueWatchingList?[position].episode?.video320 ?? "")
-          : (continueWatchingList?[position].video320 ?? ""),
+          ? ((continueWatchingList?[position].episode?.video320 ?? "").isNotEmpty
+              ? (continueWatchingList?[position].episode?.video320 ?? "")
+              : (continueWatchingList?[position].episode?.video480 ?? "").isNotEmpty
+                  ? (continueWatchingList?[position].episode?.video480 ?? "")
+                  : (continueWatchingList?[position].episode?.video720 ?? "").isNotEmpty
+                      ? (continueWatchingList?[position].episode?.video720 ?? "")
+                      : (continueWatchingList?[position].episode?.video1080 ?? ""))
+          : ((continueWatchingList?[position].video320 ?? "").isNotEmpty
+              ? (continueWatchingList?[position].video320 ?? "")
+              : (continueWatchingList?[position].video480 ?? "").isNotEmpty
+                  ? (continueWatchingList?[position].video480 ?? "")
+                  : (continueWatchingList?[position].video720 ?? "").isNotEmpty
+                      ? (continueWatchingList?[position].video720 ?? "")
+                      : (continueWatchingList?[position].video1080 ?? "")),
       cipherMediaDetails:
           (vdocipherDetails != null && vdocipherDetails.result != null)
           ? (vdocipherDetails.result)
@@ -1014,10 +1026,7 @@ class HomeState extends State<Home> {
   Widget _mobileHomeBanner(List<banner.Result>? sectionBannerList) {
     if ((sectionBannerList?.length ?? 0) == 0) return const SizedBox.shrink();
     final list = sectionBannerList!;
-    
-    // 1. DI SINI UBAHNYA: Pakai Container dan kasih margin top biar agak turun
-    return Container(
-      margin: const EdgeInsets.only(top: 20), // <-- Atur angka 20 ini kalau kurang turun/kurang naik
+    return SizedBox(
       height: Dimens.getBannerHeight(context),
       child: CarouselSlider.builder(
         itemCount: list.length,
@@ -1033,10 +1042,7 @@ class HomeState extends State<Home> {
           autoPlayAnimationDuration: Duration(
             milliseconds: Constant.animationDuration,
           ),
-          
-          // 2. DI SINI UBAHNYA: viewportFraction jadi 1.0 biar mentok kiri kanan
-          viewportFraction: 1.0, 
-          
+          viewportFraction: 0.95,
           padEnds: true,
           onPageChanged: (val, _) async {
             sectionDataProvider.setCurrentBanner(val);
@@ -1052,14 +1058,11 @@ class HomeState extends State<Home> {
           final isLive =
               (list[index].videoUploadType ?? "") == "live_stream_url";
           return ClipRRect(
-            
-            // 3. DI SINI UBAHNYA: borderRadius jadi 0 biar sudutnya nggak melengkung saat layar full
-            borderRadius: BorderRadius.circular(0), 
-            
+            borderRadius: BorderRadius.circular(16),
             clipBehavior: Clip.antiAliasWithSaveLayer,
             child: InkWell(
               focusColor: white,
-              borderRadius: BorderRadius.circular(0), // <-- Ini juga dinolin aja
+              borderRadius: BorderRadius.circular(16),
               onTap: () {
                 openDetailPage(
                   list[index].id ?? 0,
