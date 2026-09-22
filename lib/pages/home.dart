@@ -476,7 +476,7 @@ class HomeState extends State<Home> {
               ),
             ];
           },
-          body: SafeArea(child: _buildPageUI()),
+          body: SafeArea(top: false, child: _buildPageUI()),
         ),
       ),
     );
@@ -979,37 +979,8 @@ class HomeState extends State<Home> {
     return Column(
       children: [
         /* Banner */
-        if (!sectionDataProvider.loadingBanner &&
-            sectionDataProvider.sectionBannerModel.status == 200 &&
-            sectionDataProvider.sectionBannerModel.result != null)
-          Container(
-            alignment: Alignment.centerLeft,
-            padding: EdgeInsets.only(
-              left: 13,
-              right: 13,
-              top: MediaQuery.of(context).padding.top + 30,
-              bottom: 12,
-            ),
-            child: MyText(
-              color: titleTextColor,
-              text: "for_you",
-              textalign: TextAlign.start,
-              fontsizeNormal: 17,
-              fontweight: FontWeight.w600,
-              fontsizeWeb: 19,
-              multilanguage: true,
-              maxline: 1,
-              overflow: TextOverflow.ellipsis,
-              fontstyle: FontStyle.normal,
-            ),
-          ),
         if (sectionDataProvider.loadingBanner)
-          Padding(
-            padding: EdgeInsets.only(
-              top: MediaQuery.of(context).padding.top + kToolbarHeight + 8,
-            ),
-            child: ShimmerUtils.bannerMobile(context),
-          )
+          ShimmerUtils.bannerMobile(context)
         else if (sectionDataProvider.sectionBannerModel.status == 200 &&
             sectionDataProvider.sectionBannerModel.result != null)
           _mobileHomeBanner(sectionDataProvider.sectionBannerModel.result)
