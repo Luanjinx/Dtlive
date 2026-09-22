@@ -1789,9 +1789,14 @@ Future<void> prepareVideoDownload(
       onReceiveProgress: (received, total) {},
     );
 
+    String vUrl = sectionDetails?.video320 ?? "";
+    if (vUrl.isEmpty) vUrl = sectionDetails?.video480 ?? "";
+    if (vUrl.isEmpty) vUrl = sectionDetails?.video720 ?? "";
+    if (vUrl.isEmpty) vUrl = sectionDetails?.video1080 ?? "";
+
     /* Video Download */
     await dio.download(
-      sectionDetails?.video320 ?? "",
+      vUrl,
       mTargetFile?.path,
       onReceiveProgress: (received, total) async {
         if (total != -1) {
@@ -1827,7 +1832,7 @@ Future<void> prepareVideoDownload(
       securityIVKey: generateIVKey,
       name: sectionDetails?.name,
       description: sectionDetails?.description,
-      videoUrl: sectionDetails?.video320,
+      videoUrl: vUrl,
       savedDir: localPath,
       savedFile: mTargetFile?.path ?? "",
       videoType: sectionDetails?.videoType,
@@ -2072,9 +2077,14 @@ Future<void> prepareShowDownload(
       onReceiveProgress: (received, total) {},
     );
 
+    String vUrl = epiDetails?.video320 ?? "";
+    if (vUrl.isEmpty) vUrl = epiDetails?.video480 ?? "";
+    if (vUrl.isEmpty) vUrl = epiDetails?.video720 ?? "";
+    if (vUrl.isEmpty) vUrl = epiDetails?.video1080 ?? "";
+
     /* Video Download */
     await dio.download(
-      epiDetails?.video320 ?? "",
+      vUrl,
       mTargetFile?.path,
       onReceiveProgress: (received, total) async {
         if (total != -1) {
@@ -2131,7 +2141,7 @@ Future<void> prepareShowDownload(
       name: sectionDetails?.name,
       description: episodeDetails?.name,
       status: episodeDetails?.status,
-      video320: episodeDetails?.video320,
+      video320: vUrl,
       video480: episodeDetails?.video480,
       video720: episodeDetails?.video720,
       video1080: episodeDetails?.video1080,
