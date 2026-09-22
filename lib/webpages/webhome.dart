@@ -278,8 +278,20 @@ class WebHomeState extends State<WebHome> {
           ? (sectionList?[index].episode?.id ?? 0)
           : 0,
       videoUrl: (sectionList?[index].episode != null)
-          ? (sectionList?[index].episode?.video320 ?? "")
-          : (sectionList?[index].video320 ?? ""),
+          ? ((sectionList?[index].episode?.video320 ?? "").isNotEmpty
+              ? (sectionList?[index].episode?.video320 ?? "")
+              : (sectionList?[index].episode?.video480 ?? "").isNotEmpty
+                  ? (sectionList?[index].episode?.video480 ?? "")
+                  : (sectionList?[index].episode?.video720 ?? "").isNotEmpty
+                      ? (sectionList?[index].episode?.video720 ?? "")
+                      : (sectionList?[index].episode?.video1080 ?? ""))
+          : ((sectionList?[index].video320 ?? "").isNotEmpty
+              ? (sectionList?[index].video320 ?? "")
+              : (sectionList?[index].video480 ?? "").isNotEmpty
+                  ? (sectionList?[index].video480 ?? "")
+                  : (sectionList?[index].video720 ?? "").isNotEmpty
+                      ? (sectionList?[index].video720 ?? "")
+                      : (sectionList?[index].video1080 ?? "")),
       cipherMediaDetails:
           (vdocipherDetails != null && vdocipherDetails.result != null)
           ? (vdocipherDetails.result)
