@@ -1042,198 +1042,119 @@ class HomeState extends State<Home> {
           autoPlayAnimationDuration: Duration(
             milliseconds: Constant.animationDuration,
           ),
-          viewportFraction: 0.95,
-          padEnds: true,
+          viewportFraction: 1.0,
+          padEnds: false,
           onPageChanged: (val, _) async {
             sectionDataProvider.setCurrentBanner(val);
           },
         ),
         itemBuilder: (BuildContext context, int index, int pageViewIndex) {
           final imageUrl =
-              (list[index].thumbnail == null ||
-                  (list[index].thumbnail ?? "").isEmpty ||
-                  (list[index].thumbnail ?? "").contains("no_img"))
-              ? (list[index].landscape ?? "")
-              : (list[index].thumbnail ?? "");
-          final isLive =
-              (list[index].videoUploadType ?? "") == "live_stream_url";
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            clipBehavior: Clip.antiAliasWithSaveLayer,
-            child: InkWell(
-              focusColor: white,
-              borderRadius: BorderRadius.circular(16),
-              onTap: () {
-                openDetailPage(
-                  list[index].id ?? 0,
-                  list[index].subVideoType ?? 0,
-                  list[index].videoType ?? 0,
-                  list[index].typeId ?? 0,
-                );
-              },
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  /* Poster image */
-                  MyNetworkImage(imageUrl: imageUrl, fit: BoxFit.fill),
-                  /* Top gradient */
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.center,
-                        colors: [
-                          black.withValues(alpha: 0.55),
-                          black.withValues(alpha: 0.20),
-                          black.withValues(alpha: 0.05),
-                          transparent,
-                        ],
-                        stops: const [0.0, 0.25, 0.50, 1.0],
-                      ),
-                    ),
-                  ),
-                  /* Bottom gradient */
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.center,
-                        colors: [
-                          black.withValues(alpha: 0.82),
-                          black.withValues(alpha: 0.70),
-                          black.withValues(alpha: 0.50),
-                          black.withValues(alpha: 0.28),
-                          black.withValues(alpha: 0.08),
-                          transparent,
-                        ],
-                        stops: const [0.0, 0.18, 0.38, 0.58, 0.75, 1.0],
-                      ),
-                    ),
-                  ),
-                  /* Badge — top-left */
-                  Positioned(
-                    top: 14,
-                    left: 14,
-                    child: _buildBannerBadge(list[index]),
-                  ),
-                  /* Title + Metadata + Action buttons — center-bottom */
-                  Positioned(
-                    left: 14,
-                    right: 14,
-                    bottom: 20,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        MyText(
-                          color: white,
-                          text: (list[index].name ?? "").isNotEmpty
-                              ? (list[index].name ?? "")
-                              : "-",
-                          textalign: TextAlign.center,
-                          fontsizeNormal: 24,
-                          fontsizeWeb: 26,
-                          fontweight: FontWeight.w800,
-                          multilanguage: false,
-                          maxline: 2,
-                          overflow: TextOverflow.ellipsis,
-                          fontstyle: FontStyle.normal,
-                          isShadowText: true,
-                        ),
-                        const SizedBox(height: 6),
-                        _buildBannerMetaRow(list[index]),
-                        const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            // Watch Button
-                            InkWell(
-                              onTap: () {
-                                openDetailPage(
-                                  list[index].id ?? 0,
-                                  list[index].subVideoType ?? 0,
-                                  list[index].videoType ?? 0,
-                                  list[index].typeId ?? 0,
-                                );
-                              },
-                              borderRadius: BorderRadius.circular(8),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 24, vertical: 12),
-                                decoration: BoxDecoration(
-                                  color: white.withValues(alpha: 0.20),
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                      color: white.withValues(alpha: 0.10),
-                                      width: 1),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    MyImage(
-                                      imagePath: "ic_play.png",
-                                      color: white,
-                                      width: 16,
-                                      height: 16,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    MyText(
-                                      color: white,
-                                      text: "Watch",
-                                      multilanguage: false,
-                                      fontsizeNormal: 14,
-                                      fontweight: FontWeight.w700,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            if (!isLive) ...[
-                              const SizedBox(width: 12),
-                              // Bookmark Button
-                              InkWell(
-                                onTap: () async {
-                                  if (Constant.userID != null) {
-                                    await sectionDataProvider.setBookMark(
-                                      context,
-                                      index,
-                                    );
-                                  } else {
-                                    await Utils.openLogin(
-                                      context: context,
-                                      newPage: "",
-                                    );
-                                  }
-                                },
-                                borderRadius: BorderRadius.circular(8),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 14, vertical: 12),
-                                  decoration: BoxDecoration(
-                                    color: white.withValues(alpha: 0.20),
-                                    borderRadius: BorderRadius.circular(8),
-                                    border: Border.all(
-                                        color: white.withValues(alpha: 0.10),
-                                        width: 1),
-                                  ),
-                                  child: MyImage(
-                                    imagePath: (list[index].isBookmark ?? 0) == 1
-                                        ? "ic_tick.png"
-                                        : "ic_plus.png",
-                                    color: white,
-                                    width: 16,
-                                    height: 16,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ],
-                        ),
+              (list[index].landscape == null ||
+                  (list[index].landscape ?? "").isEmpty ||
+                  (list[index].landscape ?? "").contains("no_img"))
+              ? (list[index].thumbnail ?? "")
+              : (list[index].landscape ?? "");
+          return InkWell(
+            focusColor: white,
+            onTap: () {
+              openDetailPage(
+                list[index].id ?? 0,
+                list[index].subVideoType ?? 0,
+                list[index].videoType ?? 0,
+                list[index].typeId ?? 0,
+              );
+            },
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                /* Poster image */
+                MyNetworkImage(imageUrl: imageUrl, fit: BoxFit.cover),
+                /* Top gradient */
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.center,
+                      colors: [
+                        black.withValues(alpha: 0.55),
+                        black.withValues(alpha: 0.20),
+                        black.withValues(alpha: 0.05),
+                        transparent,
                       ],
+                      stops: const [0.0, 0.25, 0.50, 1.0],
                     ),
                   ),
-                ],
-              ),
+                ),
+                /* Bottom gradient */
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.center,
+                      colors: [
+                        black.withValues(alpha: 0.90),
+                        black.withValues(alpha: 0.70),
+                        black.withValues(alpha: 0.40),
+                        black.withValues(alpha: 0.15),
+                        transparent,
+                      ],
+                      stops: const [0.0, 0.25, 0.50, 0.75, 1.0],
+                    ),
+                  ),
+                ),
+                /* Badge — top-left */
+                Positioned(
+                  top: 14,
+                  left: 14,
+                  child: _buildBannerBadge(list[index]),
+                ),
+                /* Title — bottom-left */
+                Positioned(
+                  left: 14,
+                  right: 80, // leave space for indicator dots
+                  bottom: 20,
+                  child: MyText(
+                    color: white,
+                    text: (list[index].name ?? "").isNotEmpty
+                        ? (list[index].name ?? "")
+                        : "-",
+                    textalign: TextAlign.start,
+                    fontsizeNormal: 20,
+                    fontsizeWeb: 24,
+                    fontweight: FontWeight.w800,
+                    multilanguage: false,
+                    maxline: 2,
+                    overflow: TextOverflow.ellipsis,
+                    fontstyle: FontStyle.normal,
+                    isShadowText: true,
+                  ),
+                ),
+                /* Indicator dots — bottom-right */
+                Positioned(
+                  right: 14,
+                  bottom: 24,
+                  child: Consumer<SectionDataProvider>(
+                    builder: (context, provider, child) {
+                      return Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: list.asMap().entries.map((entry) {
+                          bool isCurrent = provider.cBannerIndex == entry.key;
+                          return Container(
+                            width: isCurrent ? 12.0 : 6.0,
+                            height: 6.0,
+                            margin: const EdgeInsets.symmetric(horizontal: 2.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              color: white.withValues(alpha: isCurrent ? 0.9 : 0.4),
+                            ),
+                          );
+                        }).toList(),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           );
         },
