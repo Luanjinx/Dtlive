@@ -442,6 +442,16 @@ class WebContentVideoDetailsState extends State<WebContentVideoDetails>
 
       vUrl =
           (videoDetailsProvider.contentDetailModel.result?[0].video320 ?? "");
+      if (vUrl!.isEmpty) {
+        vUrl = (videoDetailsProvider.contentDetailModel.result?[0].video480 ?? "");
+      }
+      if (vUrl.isEmpty) {
+        vUrl = (videoDetailsProvider.contentDetailModel.result?[0].video720 ?? "");
+      }
+      if (vUrl.isEmpty) {
+        vUrl = (videoDetailsProvider.contentDetailModel.result?[0].video1080 ?? "");
+      }
+
       vUploadType =
           (videoDetailsProvider.contentDetailModel.result?[0].videoUploadType ??
           "");
