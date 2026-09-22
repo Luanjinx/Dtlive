@@ -505,8 +505,7 @@ class WebContentVideoDetailsState extends State<WebContentVideoDetails>
           videoDetailsProvider.contentDetailModel.result?[0].subVideoType ?? 0,
       typeId: videoDetailsProvider.contentDetailModel.result?[0].typeId ?? 0,
       episodeId: 0,
-      videoUrl:
-          videoDetailsProvider.contentDetailModel.result?[0].video320 ?? "",
+      videoUrl: vUrl,
       cipherMediaDetails:
           (vdocipherDetails != null && vdocipherDetails.result != null)
           ? (vdocipherDetails.result)
