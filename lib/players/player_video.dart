@@ -856,7 +856,13 @@ class _PlayerVideoState extends State<PlayerVideo>
       if (!mounted) return;
       vdocipherDetails = await Utils.getVdoCipherOTP(
         context: context,
-        videoId: ep.video320 ?? "",
+        videoId: (ep.video320 ?? "").isNotEmpty
+            ? ep.video320 ?? ""
+            : (ep.video480 ?? "").isNotEmpty
+                ? ep.video480 ?? ""
+                : (ep.video720 ?? "").isNotEmpty
+                    ? ep.video720 ?? ""
+                    : ep.video1080 ?? "",
       );
       if (kDebugMode) {
         printLog(
@@ -875,7 +881,13 @@ class _PlayerVideoState extends State<PlayerVideo>
       subVideoType: 0,
       typeId: widget.playerModel.typeId ?? 0,
       episodeId: ep.id ?? 0,
-      videoUrl: ep.video320 ?? "",
+      videoUrl: (ep.video320 ?? "").isNotEmpty
+          ? ep.video320 ?? ""
+          : (ep.video480 ?? "").isNotEmpty
+              ? ep.video480 ?? ""
+              : (ep.video720 ?? "").isNotEmpty
+                  ? ep.video720 ?? ""
+                  : ep.video1080 ?? "",
       cipherMediaDetails: (vdocipherDetails?.result != null)
           ? vdocipherDetails!.result
           : null,
