@@ -220,8 +220,7 @@ class Dimens {
     if (kIsWeb) {
       return (MediaQuery.of(context).size.width / portRatio);
     }
-    // Set to a landscape-friendly ratio instead of 50% of the screen height,
-    // so the Landscape Image is not cropped like a Portrait image.
-    return (MediaQuery.of(context).size.width / 1.15);
+    // Set exactly to landRatio (same as detail page) so Landscape Image fits perfectly without cropping.
+    return (MediaQuery.of(context).size.width / landRatio);
   }
 }
