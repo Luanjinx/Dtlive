@@ -515,7 +515,7 @@ class HomeState extends State<Home> {
               ),
             ];
           },
-          body: SafeArea(top: true, child: _buildPageUI()),
+          body: SafeArea(top: false, child: _buildPageUI()),
         ),
       ),
         ),
@@ -1056,13 +1056,13 @@ class HomeState extends State<Home> {
     if ((sectionBannerList?.length ?? 0) == 0) return const SizedBox.shrink();
     final list = sectionBannerList!;
     return SizedBox(
-      height: Dimens.getBannerHeight(context),
+      height: MediaQuery.of(context).size.height * 0.65,
       child: CarouselSlider.builder(
         itemCount: list.length,
         carouselController: carouselController,
         options: CarouselOptions(
           initialPage: 0,
-          height: Dimens.getBannerHeight(context),
+          height: MediaQuery.of(context).size.height * 0.65,
           enlargeCenterPage: false,
           enableInfiniteScroll: list.length > 1,
           autoPlay: true,
@@ -1106,9 +1106,9 @@ class HomeState extends State<Home> {
                       begin: Alignment.topCenter,
                       end: Alignment.center,
                       colors: [
-                        black.withValues(alpha: 0.55),
-                        black.withValues(alpha: 0.20),
-                        black.withValues(alpha: 0.05),
+                        appBgColor,
+                        appBgColor.withValues(alpha: 0.8),
+                        appBgColor.withValues(alpha: 0.3),
                         transparent,
                       ],
                       stops: const [0.0, 0.25, 0.50, 1.0],

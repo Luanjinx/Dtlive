@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "773450355985-pvo3oh2c9sgnljdk6pqbnu30hmg2al0m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dramastream.android",
+            "certificate_hash": "9f3dde38b10bad938661533c085cc787f2ec5d18"
+          }
+        },
+        {
           "client_id": "773450355985-0c41l5laqh4iq8did1k4bsaq402qe1lh.apps.googleusercontent.com",
           "client_type": 3
         }

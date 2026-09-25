@@ -959,10 +959,14 @@ class _EpisodeBySeasonState extends State<EpisodeBySeason> {
       Utils.showSnackbar(context, "fail", "no_internet", true);
       return;
     }
-    printLog(
-      "video320 ----------> ${episodeProvider.episodeList?[position].video320}",
-    );
-    if ((episodeProvider.episodeList?[position].video320 ?? "").isNotEmpty) {
+    
+    final episode = episodeProvider.episodeList?[position];
+    bool hasValidUrl = (episode?.video320 ?? "").isNotEmpty ||
+                       (episode?.video480 ?? "").isNotEmpty ||
+                       (episode?.video720 ?? "").isNotEmpty ||
+                       (episode?.video1080 ?? "").isNotEmpty;
+
+    if (hasValidUrl) {
       printLog("seasonPos ---------> ${showDetailsProvider.seasonPos}");
       printLog("episode Length ----> ${episodeProvider.episodeList?.length}");
       if (!mounted) return;
@@ -971,7 +975,7 @@ class _EpisodeBySeasonState extends State<EpisodeBySeason> {
         contentDetails: showDetailsProvider.contentDetailModel.result?[0],
         seasonPos: showDetailsProvider.seasonPos,
         episodePos: position,
-        episodeDetails: episodeProvider.episodeList?[position],
+        episodeDetails: episode,
       );
     } else {
       if (!mounted) return;
