@@ -845,13 +845,8 @@ class _EpisodeBySeasonState extends State<EpisodeBySeason> {
   }
 
   Widget _buildDownloadBtn({required int position}) {
-    if ((episodeProvider.episodeList?[position].videoUploadType ==
-                "server_video" ||
-            episodeProvider.episodeList?[position].videoUploadType ==
-                "external") &&
-        (episodeProvider.episodeList?[position].videoExtension ?? "").contains(
-          "mp4",
-        )) {
+    if (episodeProvider.episodeList?[position].videoUploadType == "server_video" ||
+        episodeProvider.episodeList?[position].videoUploadType == "external") {
       return Consumer2<ShowDetailsProvider, VideoDownloadProvider>(
         builder: (context, showDetailsProvider, downloadProvider, child) {
           bool isInDownload = false;

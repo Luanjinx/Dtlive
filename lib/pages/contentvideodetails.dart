@@ -1944,16 +1944,8 @@ class ContentVideoDetailsState extends State<ContentVideoDetails>
   }
 
   Widget _buildDownloadBtn() {
-    if ((videoDetailsProvider.contentDetailModel.result?[0].videoUploadType ==
-                "server_video" ||
-            videoDetailsProvider
-                    .contentDetailModel
-                    .result?[0]
-                    .videoUploadType ==
-                "external") &&
-        (videoDetailsProvider.contentDetailModel.result?[0].videoExtension ??
-                "")
-            .contains("mp4")) {
+    if (videoDetailsProvider.contentDetailModel.result?[0].videoUploadType == "server_video" ||
+        videoDetailsProvider.contentDetailModel.result?[0].videoUploadType == "external") {
       return Consumer2<VideoDetailsProvider, VideoDownloadProvider>(
         builder: (context, videoDetailsProvider, downloadProvider, child) {
           bool isInDownload = false;
