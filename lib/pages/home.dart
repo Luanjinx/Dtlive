@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart';
@@ -456,8 +457,33 @@ class HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: appBgColor,
+    return Stack(
+      children: [
+        Container(color: appBgColor),
+        Consumer<SectionDataProvider>(
+          builder: (context, sectionDataProvider, child) {
+            final bannerList = sectionDataProvider.sectionBannerModel.result;
+            if (bannerList == null || bannerList.isEmpty || sectionDataProvider.loadingBanner) {
+              return const SizedBox.shrink();
+            }
+            final banner = bannerList[sectionDataProvider.cBannerIndex];
+            return Container(
+              height: kToolbarHeight + MediaQuery.of(context).padding.top + 50,
+              width: double.infinity,
+              child: ClipRect(
+                child: ImageFiltered(
+                  imageFilter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
+                  child: MyNetworkImage(
+                    imageUrl: banner.landscape ?? "",
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+        Scaffold(
+          backgroundColor: transparent,
       body: NotificationListener<ScrollNotification>(
         onNotification: (scrollNotification) {
           if (!nestedScrollController.hasClients) return false;
@@ -488,9 +514,11 @@ class HomeState extends State<Home> {
               ),
             ];
           },
-          body: SafeArea(top: false, child: _buildPageUI()),
+          body: SafeArea(top: true, child: _buildPageUI()),
         ),
       ),
+    );
+      ],
     );
   }
 
