@@ -1,77 +1,41 @@
 {
   "project_info": {
-    "project_number": "988658912152",
-    "firebase_url": "https://streamit-5ef16-default-rtdb.firebaseio.com",
-    "project_id": "streamit-5ef16",
-    "storage_bucket": "streamit-5ef16.firebasestorage.app"
+    "project_number": "773450355985",
+    "firebase_url": "https://streamit-7bbe3-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "streamit-7bbe3",
+    "storage_bucket": "streamit-7bbe3.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:988658912152:android:b003f97916b3e6667bf9ed",
+        "mobilesdk_app_id": "1:773450355985:android:7f13282f6a49f2b70ce8b0",
         "android_client_info": {
-          "package_name": "com.moviestream.android"
+          "package_name": "com.dramastream.android"
         }
       },
       "oauth_client": [
         {
-          "client_id": "988658912152-fa0ouj7at8jubc2kgl5rnq0noilke89i.apps.googleusercontent.com",
+          "client_id": "773450355985-0c41l5laqh4iq8did1k4bsaq402qe1lh.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCsJLRihuO-i2cMfJeB7lLeCJ158e8yeFk"
+          "current_key": "AIzaSyDZbpBqkGZELqnNWHle9XoZ_ov2h3lIuMw"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "988658912152-fa0ouj7at8jubc2kgl5rnq0noilke89i.apps.googleusercontent.com",
+              "client_id": "773450355985-0c41l5laqh4iq8did1k4bsaq402qe1lh.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "988658912152-e5suc8irt3r1sg619husms3jdgvjgmun.apps.googleusercontent.com",
+              "client_id": "773450355985-edufn5qs1u2jr7aqjrhascmr5rjtvrs3.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.iqonic.ios"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:988658912152:android:9a4bf78d663e738a7bf9ed",
-        "android_client_info": {
-          "package_name": "com.nexstream.prjkt"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "988658912152-fa0ouj7at8jubc2kgl5rnq0noilke89i.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCsJLRihuO-i2cMfJeB7lLeCJ158e8yeFk"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "988658912152-fa0ouj7at8jubc2kgl5rnq0noilke89i.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "988658912152-e5suc8irt3r1sg619husms3jdgvjgmun.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.iqonic.ios"
+                "bundle_id": "com.moviestream.macos"
               }
             }
           ]

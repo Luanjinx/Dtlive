@@ -466,7 +466,8 @@ class HomeState extends State<Home> {
             if (bannerList == null || bannerList.isEmpty || sectionDataProvider.loadingBanner) {
               return const SizedBox.shrink();
             }
-            final banner = bannerList[sectionDataProvider.cBannerIndex];
+            final currentIndex = sectionDataProvider.cBannerIndex ?? 0;
+            final banner = bannerList[currentIndex];
             return Container(
               height: kToolbarHeight + MediaQuery.of(context).padding.top + 50,
               width: double.infinity,
@@ -517,7 +518,7 @@ class HomeState extends State<Home> {
           body: SafeArea(top: true, child: _buildPageUI()),
         ),
       ),
-    );
+        ),
       ],
     );
   }

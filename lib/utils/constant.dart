@@ -7,9 +7,9 @@ class Constant {
   static String apiToken =
       'DTLdcFLx12g5MIGu7deMJIJQTD56qcZx'; // Replace with your API Token (Get from Admin panel)
 
-  static String appName = "Moviestream";
+  static String appName = "Dramastream";
   static String appPackageName =
-      "com.moviestream.android"; // This is used for PIP channel
+      "com.dramastream.android"; // This is used for PIP channel
   static String appleAppId = ""; // This is used for Appstore iOS App redirect
   static String appVersion = "";
 
@@ -83,7 +83,7 @@ class Constant {
   /* Stripe Checkout fields */
   // static const String webDomainURL = 'http://localhost:8080/'; //Localhost
   static const String webDomainURL =
-      'https://dtlivefweb.divinetechs.com/'; //Normal Web Host
+      'http://web.nexstream.biz.id/'; //Normal Web Host
   static String? paymentMode =
       'subscription'; // Set paymentMode as 'payment' for Single Time purchase Packages (Not Recurring Packages)
   static String? publishableKey;
