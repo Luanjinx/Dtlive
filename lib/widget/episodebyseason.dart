@@ -1015,7 +1015,7 @@ class _EpisodeBySeasonState extends State<EpisodeBySeason> {
                     if (v1080.isNotEmpty) _buildQualityOption(context, "1080p", "Full HD", v1080, position, episode, false),
                     
                     const SizedBox(height: 10),
-                    const Divider(color: otherColor, thickness: 1),
+                    Divider(color: otherColor, thickness: 1),
                     const SizedBox(height: 10),
                     
                     if (v320.isNotEmpty || v480.isNotEmpty || v720.isNotEmpty || v1080.isNotEmpty)

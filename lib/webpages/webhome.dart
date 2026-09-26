@@ -990,7 +990,7 @@ class WebHomeState extends State<WebHome> {
                   Positioned(
                     left: 14,
                     right: 70,
-                    bottom: 16,
+                    bottom: 31,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
@@ -1018,7 +1018,7 @@ class WebHomeState extends State<WebHome> {
                   /* Action buttons — bottom-right */
                   Positioned(
                     right: 14,
-                    bottom: 14,
+                    bottom: 29,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [

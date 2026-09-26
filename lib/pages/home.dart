@@ -1146,7 +1146,7 @@ class HomeState extends State<Home> {
                 Positioned(
                   left: 14,
                   right: 80, // leave space for indicator dots
-                  bottom: 20,
+                  bottom: 35,
                   child: MyText(
                     color: white,
                     text: (list[index].name ?? "").isNotEmpty
@@ -1166,7 +1166,7 @@ class HomeState extends State<Home> {
                 /* Indicator dots — bottom-right */
                 Positioned(
                   right: 14,
-                  bottom: 24,
+                  bottom: 39,
                   child: Consumer<SectionDataProvider>(
                     builder: (context, provider, child) {
                       return Row(
