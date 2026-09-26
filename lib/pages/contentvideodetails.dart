@@ -2174,7 +2174,7 @@ class ContentVideoDetailsState extends State<ContentVideoDetails>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     MyText(
-                      text: "Select Download Quality",
+                      text: "Select Download Method",
                       multilanguage: false,
                       fontsizeNormal: 16,
                       color: titleTextColor,
@@ -2186,7 +2186,7 @@ class ContentVideoDetailsState extends State<ContentVideoDetails>
                     ),
                     const SizedBox(height: 5),
                     MyText(
-                      text: "Choose a quality to download. Higher quality means larger file size.",
+                      text: "Do you want to download internally or via browser?",
                       multilanguage: false,
                       fontsizeNormal: 12,
                       color: descTextColor,
@@ -2197,17 +2197,8 @@ class ContentVideoDetailsState extends State<ContentVideoDetails>
                       textalign: TextAlign.start,
                     ),
                     const SizedBox(height: 20),
-                    if (v320.isNotEmpty) _buildQualityOption(context, "320p", "Low", v320, result, false),
-                    if (v480.isNotEmpty) _buildQualityOption(context, "480p", "Standard", v480, result, false),
-                    if (v720.isNotEmpty) _buildQualityOption(context, "720p", "HD", v720, result, false),
-                    if (v1080.isNotEmpty) _buildQualityOption(context, "1080p", "Full HD", v1080, result, false),
-                    
-                    const SizedBox(height: 10),
-                    Divider(color: Colors.grey.withOpacity(0.5), thickness: 1),
-                    const SizedBox(height: 10),
-                    
-                    if (v320.isNotEmpty || v480.isNotEmpty || v720.isNotEmpty || v1080.isNotEmpty)
-                      _buildQualityOption(context, "External Link", "Download via Browser", v1080.isNotEmpty ? v1080 : (v720.isNotEmpty ? v720 : (v480.isNotEmpty ? v480 : v320)), result, true),
+                    _buildMethodOption(context, "Internal Download", "Download inside the app", false, result, v320, v480, v720, v1080),
+                    _buildMethodOption(context, "External Download", "Download via Browser", true, result, v320, v480, v720, v1080),
                   ],
                 ),
               ),
@@ -2219,6 +2210,106 @@ class ContentVideoDetailsState extends State<ContentVideoDetails>
       if (!mounted) return;
       Utils.showSnackbar(context, "fail", "invalid_url", true);
     }
+  }
+
+  Widget _buildMethodOption(BuildContext context, String title, String subtitle, bool isExternal, var result, String v320, String v480, String v720, String v1080) {
+    return InkWell(
+      onTap: () {
+        Navigator.pop(context);
+        _showResolutionBottomSheet(isExternal, result, v320, v480, v720, v1080);
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+        decoration: BoxDecoration(
+          border: Border.all(color: colorPrimary, width: 1.5),
+          borderRadius: BorderRadius.circular(8),
+          color: colorPrimary.withOpacity(0.05),
+        ),
+        child: Row(
+          children: [
+            Icon(isExternal ? Icons.open_in_browser : Icons.download, color: colorPrimary, size: 28),
+            const SizedBox(width: 15),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  MyText(
+                    text: title,
+                    multilanguage: false,
+                    fontsizeNormal: 14,
+                    color: white,
+                    fontweight: FontWeight.w700,
+                  ),
+                  MyText(
+                    text: subtitle,
+                    multilanguage: false,
+                    fontsizeNormal: 12,
+                    color: descTextColor,
+                    fontweight: FontWeight.w500,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showResolutionBottomSheet(bool isExternal, var result, String v320, String v480, String v720, String v1080) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: lightBlack,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      builder: (BuildContext context) {
+        return Wrap(
+          children: <Widget>[
+            Container(
+              padding: const EdgeInsets.all(23),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  MyText(
+                    text: "Select Resolution",
+                    multilanguage: false,
+                    fontsizeNormal: 16,
+                    color: titleTextColor,
+                    fontstyle: FontStyle.normal,
+                    fontweight: FontWeight.w700,
+                    maxline: 2,
+                    overflow: TextOverflow.ellipsis,
+                    textalign: TextAlign.start,
+                  ),
+                  const SizedBox(height: 5),
+                  MyText(
+                    text: "Choose a quality to download.",
+                    multilanguage: false,
+                    fontsizeNormal: 12,
+                    color: descTextColor,
+                    fontstyle: FontStyle.normal,
+                    fontweight: FontWeight.w600,
+                    maxline: 2,
+                    overflow: TextOverflow.ellipsis,
+                    textalign: TextAlign.start,
+                  ),
+                  const SizedBox(height: 20),
+                  if (v320.isNotEmpty) _buildQualityOption(context, "320p", "Low", v320, result, isExternal),
+                  if (v480.isNotEmpty) _buildQualityOption(context, "480p", "Standard", v480, result, isExternal),
+                  if (v720.isNotEmpty) _buildQualityOption(context, "720p", "HD", v720, result, isExternal),
+                  if (v1080.isNotEmpty) _buildQualityOption(context, "1080p", "Full HD", v1080, result, isExternal),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Widget _buildQualityOption(BuildContext context, String title, String subtitle, String url, var result, bool isExternal) {
@@ -2270,7 +2361,7 @@ class ContentVideoDetailsState extends State<ContentVideoDetails>
             const SizedBox(width: 15),
             Expanded(
               child: MyText(
-                text: isExternal ? subtitle : "$title \u2022 $subtitle",
+                text: subtitle,
                 multilanguage: false,
                 fontsizeNormal: 14,
                 color: white,
