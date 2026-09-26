@@ -475,7 +475,11 @@ class HomeState extends State<Home> {
                 child: ImageFiltered(
                   imageFilter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
                   child: MyNetworkImage(
-                    imageUrl: banner.landscape ?? "",
+                    imageUrl: (banner.thumbnail == null ||
+                            (banner.thumbnail ?? "").isEmpty ||
+                            (banner.thumbnail ?? "").contains("no_img"))
+                        ? (banner.landscape ?? "")
+                        : (banner.thumbnail ?? ""),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -1079,11 +1083,11 @@ class HomeState extends State<Home> {
         ),
         itemBuilder: (BuildContext context, int index, int pageViewIndex) {
           final imageUrl =
-              (list[index].landscape == null ||
-                  (list[index].landscape ?? "").isEmpty ||
-                  (list[index].landscape ?? "").contains("no_img"))
-              ? (list[index].thumbnail ?? "")
-              : (list[index].landscape ?? "");
+              (list[index].thumbnail == null ||
+                  (list[index].thumbnail ?? "").isEmpty ||
+                  (list[index].thumbnail ?? "").contains("no_img"))
+              ? (list[index].landscape ?? "")
+              : (list[index].thumbnail ?? "");
           return InkWell(
             focusColor: white,
             onTap: () {
