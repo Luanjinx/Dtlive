@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:intl/intl.dart';
@@ -2147,20 +2148,140 @@ class ContentVideoDetailsState extends State<ContentVideoDetails>
       Utils.showSnackbar(context, "fail", "no_internet", true);
       return;
     }
-    if ((videoDetailsProvider.contentDetailModel.result?[0].video320 ?? "")
-        .isNotEmpty) {
-      try {
-        prepareVideoDownload(
-          context,
-          videoDetailsProvider.contentDetailModel.result?[0],
-        );
-      } catch (e) {
-        printLog("Downloading... Exception ======> $e");
-      }
+    
+    var result = videoDetailsProvider.contentDetailModel.result?[0];
+    String v320 = result?.video320 ?? "";
+    String v480 = result?.video480 ?? "";
+    String v720 = result?.video720 ?? "";
+    String v1080 = result?.video1080 ?? "";
+
+    if (v320.isNotEmpty || v480.isNotEmpty || v720.isNotEmpty || v1080.isNotEmpty) {
+      showModalBottomSheet(
+        context: context,
+        backgroundColor: lightBlack,
+        isScrollControlled: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        builder: (BuildContext context) {
+          return Wrap(
+            children: <Widget>[
+              Container(
+                padding: const EdgeInsets.all(23),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    MyText(
+                      text: "Select Download Quality",
+                      multilanguage: false,
+                      fontsizeNormal: 16,
+                      color: titleTextColor,
+                      fontstyle: FontStyle.normal,
+                      fontweight: FontWeight.w700,
+                      maxline: 2,
+                      overflow: TextOverflow.ellipsis,
+                      textalign: TextAlign.start,
+                    ),
+                    const SizedBox(height: 5),
+                    MyText(
+                      text: "Choose a quality to download. Higher quality means larger file size.",
+                      multilanguage: false,
+                      fontsizeNormal: 12,
+                      color: descTextColor,
+                      fontstyle: FontStyle.normal,
+                      fontweight: FontWeight.w600,
+                      maxline: 2,
+                      overflow: TextOverflow.ellipsis,
+                      textalign: TextAlign.start,
+                    ),
+                    const SizedBox(height: 20),
+                    if (v320.isNotEmpty) _buildQualityOption(context, "320p", "Low", v320, result, false),
+                    if (v480.isNotEmpty) _buildQualityOption(context, "480p", "Standard", v480, result, false),
+                    if (v720.isNotEmpty) _buildQualityOption(context, "720p", "HD", v720, result, false),
+                    if (v1080.isNotEmpty) _buildQualityOption(context, "1080p", "Full HD", v1080, result, false),
+                    
+                    const SizedBox(height: 10),
+                    const Divider(color: otherColor, thickness: 1),
+                    const SizedBox(height: 10),
+                    
+                    if (v320.isNotEmpty || v480.isNotEmpty || v720.isNotEmpty || v1080.isNotEmpty)
+                      _buildQualityOption(context, "External Link", "Download via Browser", v1080.isNotEmpty ? v1080 : (v720.isNotEmpty ? v720 : (v480.isNotEmpty ? v480 : v320)), result, true),
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
+      );
     } else {
       if (!mounted) return;
       Utils.showSnackbar(context, "fail", "invalid_url", true);
     }
+  }
+
+  Widget _buildQualityOption(BuildContext context, String title, String subtitle, String url, var result, bool isExternal) {
+    return InkWell(
+      onTap: () async {
+        Navigator.pop(context);
+        if (isExternal) {
+          try {
+            if (await canLaunchUrl(Uri.parse(url))) {
+              await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+            } else {
+              Utils.showToast("Could not open external link");
+            }
+          } catch (e) {
+            Utils.showToast("Error opening external link");
+          }
+        } else {
+          try {
+            prepareVideoDownload(context, result, selectedUrl: url);
+          } catch (e) {
+            printLog("Downloading... Exception ======> \$e");
+          }
+        }
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+        decoration: BoxDecoration(
+          border: Border.all(color: colorPrimary, width: 1.5),
+          borderRadius: BorderRadius.circular(8),
+          color: colorPrimary.withOpacity(0.05),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: colorPrimary.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: MyText(
+                text: title,
+                multilanguage: false,
+                fontsizeNormal: 12,
+                color: colorPrimary,
+                fontweight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(width: 15),
+            Expanded(
+              child: MyText(
+                text: isExternal ? subtitle : "$title \u2022 $subtitle",
+                multilanguage: false,
+                fontsizeNormal: 14,
+                color: white,
+                fontweight: FontWeight.w600,
+              ),
+            ),
+            Icon(isExternal ? Icons.open_in_browser : Icons.download, color: colorPrimary, size: 22),
+          ],
+        ),
+      ),
+    );
   }
 
   void buildDownloadCompleteDialog() {

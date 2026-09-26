@@ -1689,8 +1689,9 @@ class ApiService {
 /* ========================== Download Videos ========================== */
 Future<void> prepareVideoDownload(
   BuildContext context,
-  contentdetails.Result? contentDetails,
-) async {
+  contentdetails.Result? contentDetails, {
+  String? selectedUrl,
+}) async {
   contentdetails.Result? sectionDetails = contentDetails;
   printLog('videoExtension ============> ${sectionDetails?.videoExtension}');
   final downloadProvider = Provider.of<VideoDownloadProvider>(
@@ -1789,7 +1790,7 @@ Future<void> prepareVideoDownload(
       onReceiveProgress: (received, total) {},
     );
 
-    String vUrl = sectionDetails?.video320 ?? "";
+    String vUrl = selectedUrl ?? sectionDetails?.video320 ?? "";
     if (vUrl.isEmpty) vUrl = sectionDetails?.video480 ?? "";
     if (vUrl.isEmpty) vUrl = sectionDetails?.video720 ?? "";
     if (vUrl.isEmpty) vUrl = sectionDetails?.video1080 ?? "";
@@ -1879,6 +1880,7 @@ Future<void> prepareShowDownload(
   required int? seasonPos,
   required int? episodePos,
   required episode.Result? episodeDetails,
+  String? selectedUrl,
 }) async {
   contentdetails.Result? sectionDetails = contentDetails;
   int seasonPosition = seasonPos ?? 0;
@@ -2077,7 +2079,7 @@ Future<void> prepareShowDownload(
       onReceiveProgress: (received, total) {},
     );
 
-    String vUrl = epiDetails?.video320 ?? "";
+    String vUrl = selectedUrl ?? epiDetails?.video320 ?? "";
     if (vUrl.isEmpty) vUrl = epiDetails?.video480 ?? "";
     if (vUrl.isEmpty) vUrl = epiDetails?.video720 ?? "";
     if (vUrl.isEmpty) vUrl = epiDetails?.video1080 ?? "";
