@@ -17,6 +17,7 @@ import '../routes/routes_constant.dart';
 import '../subscription/mysubscribedplan.dart';
 import '../subscription/subscription.dart';
 import '../subscription/subscriptionhistory.dart';
+import '../webpages/weblivetvdetails.dart';
 import '../webpages/webmyspace.dart';
 import '../webpages/webprofile.dart';
 import '../webpages/webprofileavatar.dart';
@@ -243,6 +244,19 @@ class RoutesConfig {
               ? subVideoType == Constant.showContentType
               : videoType == Constant.showContentType;
 
+          if (typeId == Constant.liveTvContentType) {
+            return WebLiveTvDetails(
+              videoId,
+              subVideoType,
+              videoType,
+              typeId,
+              newPage: RoutesConstant.contentDetailsPage,
+              oldPage: newPage,
+              reqText: "deeplink",
+              key: ValueKey("$videoId$videoType$typeId$subVideoType"),
+            );
+          }
+
           return isShowDetails
               ? WebContentShowDetails(
                   videoId,
@@ -291,6 +305,19 @@ class RoutesConfig {
           homeProvider.getSectionType();
 
           final bool isShowDetails = (videoType == Constant.showContentType);
+
+          if (typeId == Constant.liveTvContentType) {
+            return WebLiveTvDetails(
+              videoId,
+              0,
+              videoType,
+              typeId,
+              newPage: RoutesConstant.contentDetailsPage,
+              oldPage: newPage,
+              reqText: "deeplink",
+              key: ValueKey("$videoId$videoType$typeId"),
+            );
+          }
 
           return isShowDetails
               ? WebContentShowDetails(

@@ -538,7 +538,7 @@ class HomeState extends State<Home> {
       backgroundColor: transparent,
       flexibleSpace: AnimatedOpacity(
         duration: const Duration(milliseconds: 300),
-        opacity: bottombarProvider.isShowBottombar ? 0.0 : 1.0,
+        opacity: innerBoxIsScrolled ? 1.0 : 0.0,
         child: ClipRRect(
           child: Container(color: appBgColor.withValues(alpha: 0.8)),
         ),
