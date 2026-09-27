@@ -83,7 +83,7 @@ class Constant {
   /* Stripe Checkout fields */
   // static const String webDomainURL = 'http://localhost:8080/'; //Localhost
   static const String webDomainURL =
-      'http://web.nexstream.biz.id/'; //Normal Web Host
+      'http://demo.dramastream.cloud/'; //Normal Web Host
   static String? paymentMode =
       'subscription'; // Set paymentMode as 'payment' for Single Time purchase Packages (Not Recurring Packages)
   static String? publishableKey;

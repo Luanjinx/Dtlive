@@ -38,6 +38,8 @@ import '../model/contentdetailmodel.dart';
 import '../utils/dimens.dart';
 import '../widget/nodata.dart';
 import '../provider/videodetailsprovider.dart';
+import '../provider/sectionbytypeprovider.dart';
+import '../widget/content_section_widget.dart';
 import '../utils/color.dart';
 import '../utils/constant.dart';
 import '../widget/myimage.dart';
@@ -140,6 +142,7 @@ class LiveTvDetailsState extends State<LiveTvDetails>
         widget.subVideoType,
         1,
       ),
+      Provider.of<SectionByTypeProvider>(context, listen: false).getSectionList(widget.typeId, "0", 1),
     ]);
 
     if (videoDetailsProvider.contentDetailModel.status == 200) {
@@ -587,6 +590,9 @@ class LiveTvDetailsState extends State<LiveTvDetails>
 
               /* AdMob */
               SmartBannerAd(isSpacing: true, topSpace: 10, bottomSpace: 10),
+
+              /* Live TV Sections */
+              _buildLiveTvSections(),
             ],
           ),
         ),
@@ -2632,6 +2638,91 @@ class LiveTvDetailsState extends State<LiveTvDetails>
   }
   /* ========= Dialogs ========= */
 
+  Widget _buildLiveTvSections() {
+    return Consumer<SectionByTypeProvider>(
+      builder: (context, sectionByTypeProvider, child) {
+        if (sectionByTypeProvider.loadingSection) {
+          return const SizedBox.shrink();
+        }
+        final sectionList = sectionByTypeProvider.sectionListModel.result;
+        if (sectionList == null || sectionList.isEmpty) {
+          return const SizedBox.shrink();
+        }
+        return ListView.builder(
+          itemCount: sectionList.length,
+          shrinkWrap: true,
+          padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (BuildContext context, int index) {
+            if (sectionList[index].data != null &&
+                (sectionList[index].data?.length ?? 0) > 0) {
+              ContentCardLayout layout = ContentCardLayout.portrait;
+              final layoutStr = sectionList[index].screenLayout ?? "";
+              if (layoutStr == "landscape") {
+                layout = ContentCardLayout.landscape;
+              } else if (layoutStr == "big_landscape") {
+                layout = ContentCardLayout.bigLandscape;
+              } else if (layoutStr == "index_landscape") {
+                layout = ContentCardLayout.indexLandscape;
+              } else if (layoutStr == "portrait") {
+                layout = ContentCardLayout.portrait;
+              } else if (layoutStr == "big_portrait") {
+                layout = ContentCardLayout.bigPortrait;
+              } else if (layoutStr == "index_portrait") {
+                layout = ContentCardLayout.indexPortrait;
+              } else if (layoutStr == "square") {
+                layout = ContentCardLayout.square;
+              }
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14),
+                    child: MyText(
+                      color: white,
+                      text: sectionList[index].title ?? "",
+                      multilanguage: false,
+                      textalign: TextAlign.start,
+                      fontsizeNormal: 16,
+                      fontsizeWeb: 18,
+                      fontweight: FontWeight.w600,
+                      maxline: 1,
+                      overflow: TextOverflow.ellipsis,
+                      fontstyle: FontStyle.normal,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  ContentSectionWidget(
+                    items: sectionList[index].data,
+                    layout: layout,
+                    showScrollArrows: false,
+                    horizontalPadding: 14,
+                    onItemTap: (datum, i) {
+                      Utils.openDetailsWithReplace(
+                        context: context,
+                        videoId: datum.id ?? 0,
+                        subVideoType: datum.subVideoType ?? 0,
+                        videoType: datum.videoType ?? 0,
+                        typeId: datum.typeId ?? 0,
+                        newPage: RoutesConstant.contentDetailsPage,
+                        oldPage: "",
+                        reqText: "deeplink",
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 25),
+                ],
+              );
+            } else {
+              return const SizedBox.shrink();
+            }
+          },
+        );
+      },
+    );
+  }
+
   /* ========= Open Player ========= */
   Future<void> openPlayer(String playType) async {
     /* CHECK SUBSCRIPTION */
@@ -2825,5 +2916,5 @@ class LiveTvDetailsState extends State<LiveTvDetails>
     );
   }
 
-  /* ========= Open Player ========= */
+
 }
