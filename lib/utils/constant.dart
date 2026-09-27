@@ -120,6 +120,7 @@ class Constant {
   static int channelContentType = 6;
   static int kidsContentType = 7;
   static int shortsContentType = 8; //Clips content
+  static int liveTvContentType = 9; //Live TV content
   static int continueWatchType = 101;
   static int channelType = 102;
   static int rentContentType = 103;

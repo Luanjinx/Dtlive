@@ -11,6 +11,8 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
 import '../model/playermodel.dart';
 import '../pages/sectionviewall.dart';
 import '../pages/contentbyid.dart';
@@ -1291,7 +1293,7 @@ class HomeState extends State<Home> {
                   AnimatedSmoothIndicator(
                     count: (sectionBannerList?.length ?? 0),
                     activeIndex: sectionDataProvider.cBannerIndex ?? 0,
-                    effect: const ScrollingDotsEffect(
+                    effect: ScrollingDotsEffect(
                       spacing: 8,
                       radius: 4,
                       activeDotScale: 1.2,
