@@ -1057,253 +1057,404 @@ class HomeState extends State<Home> {
 
   /* Banner START ************** */
   Widget _mobileHomeBanner(List<banner.Result>? sectionBannerList) {
-    if ((sectionBannerList?.length ?? 0) == 0) return const SizedBox.shrink();
-    final list = sectionBannerList!;
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.65,
-      child: CarouselSlider.builder(
-        itemCount: list.length,
-        carouselController: carouselController,
-        options: CarouselOptions(
-          initialPage: 0,
-          height: MediaQuery.of(context).size.height * 0.65,
-          enlargeCenterPage: false,
-          enableInfiniteScroll: list.length > 1,
-          autoPlay: true,
-          autoPlayCurve: Curves.easeInOutCubic,
-          autoPlayInterval: Duration(milliseconds: Constant.bannerDuration),
-          autoPlayAnimationDuration: Duration(
-            milliseconds: Constant.animationDuration,
-          ),
-          viewportFraction: 1.0,
-          padEnds: false,
-          onPageChanged: (val, _) async {
-            sectionDataProvider.setCurrentBanner(val);
-          },
-        ),
-        itemBuilder: (BuildContext context, int index, int pageViewIndex) {
-          final imageUrl =
-              (list[index].thumbnail == null ||
-                  (list[index].thumbnail ?? "").isEmpty ||
-                  (list[index].thumbnail ?? "").contains("no_img"))
-              ? (list[index].landscape ?? "")
-              : (list[index].thumbnail ?? "");
-          return InkWell(
-            focusColor: white,
-            onTap: () {
-              openDetailPage(
-                list[index].id ?? 0,
-                list[index].subVideoType ?? 0,
-                list[index].videoType ?? 0,
-                list[index].typeId ?? 0,
-              );
-            },
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                /* Poster image */
-                MyNetworkImage(imageUrl: imageUrl, fit: BoxFit.cover),
-                /* Top gradient */
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.center,
-                      colors: [
-                        appBgColor,
-                        appBgColor.withValues(alpha: 0.8),
-                        appBgColor.withValues(alpha: 0.3),
-                        transparent,
-                      ],
-                      stops: const [0.0, 0.25, 0.50, 1.0],
-                    ),
-                  ),
-                ),
-                /* Bottom gradient */
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.center,
-                      colors: [
-                        black.withValues(alpha: 0.90),
-                        black.withValues(alpha: 0.70),
-                        black.withValues(alpha: 0.40),
-                        black.withValues(alpha: 0.15),
-                        transparent,
-                      ],
-                      stops: const [0.0, 0.25, 0.50, 0.75, 1.0],
-                    ),
-                  ),
-                ),
-                /* Badge — top-left */
-                Positioned(
-                  top: 14,
-                  left: 14,
-                  child: _buildBannerBadge(list[index]),
-                ),
-                /* Title — bottom-left */
-                Positioned(
-                  left: 14,
-                  right: 80, // leave space for indicator dots
-                  bottom: 35,
-                  child: MyText(
-                    color: white,
-                    text: (list[index].name ?? "").isNotEmpty
-                        ? (list[index].name ?? "")
-                        : "-",
-                    textalign: TextAlign.start,
-                    fontsizeNormal: 20,
-                    fontsizeWeb: 24,
-                    fontweight: FontWeight.w800,
-                    multilanguage: false,
-                    maxline: 2,
-                    overflow: TextOverflow.ellipsis,
-                    fontstyle: FontStyle.normal,
-                    isShadowText: true,
-                  ),
-                ),
-                /* Indicator dots — bottom-right */
-                Positioned(
-                  right: 14,
-                  bottom: 39,
-                  child: Consumer<SectionDataProvider>(
-                    builder: (context, provider, child) {
-                      return Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: list.asMap().entries.map((entry) {
-                          bool isCurrent = provider.cBannerIndex == entry.key;
-                          return Container(
-                            width: isCurrent ? 12.0 : 6.0,
-                            height: 6.0,
-                            margin: const EdgeInsets.symmetric(horizontal: 2.0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              color: white.withValues(alpha: isCurrent ? 0.9 : 0.4),
-                            ),
-                          );
-                        }).toList(),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildBannerBadge(banner.Result item) {
-    final isLive = (item.videoUploadType ?? "") == "live_stream_url";
-    if (isLive) {
-      return _badgePill(label: "LIVE", bgColor: colorAccent, showDot: true);
-    }
-    final isPremium = (item.isPremium ?? 0) == 1 && (item.isBuy ?? 0) == 0;
-    if (isPremium) {
-      return _badgePill(label: "PREMIUM", bgColor: secondaryBgColor);
-    }
-    return SizedBox.shrink();
-  }
-
-  Widget _badgePill({
-    required String label,
-    required Color bgColor,
-    bool showDot = false,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: bgColor.withValues(alpha: 0.55),
-        shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: bgColor.withValues(alpha: 0.85), width: 1),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
+    if ((sectionBannerList?.length ?? 0) > 0) {
+      return Stack(
+        alignment: AlignmentDirectional.bottomCenter,
+        clipBehavior: Clip.antiAliasWithSaveLayer,
         children: [
-          if (showDot) ...[
-            Container(
-              width: 7,
-              height: 7,
-              decoration: const BoxDecoration(
-                color: white,
-                shape: BoxShape.circle,
+          /* Poster */
+          SizedBox(
+            height: Dimens.getBannerHeight(context),
+            child: InkWell(
+              focusColor: white,
+              borderRadius: BorderRadius.circular(0),
+              onTap: () {
+                printLog(
+                    "Clicked on index ==> ${sectionDataProvider.cBannerIndex}");
+                openDetailPage(
+                  sectionBannerList?[(sectionDataProvider.cBannerIndex ?? 0)]
+                          .id ??
+                      0,
+                  sectionBannerList?[(sectionDataProvider.cBannerIndex ?? 0)]
+                          .subVideoType ??
+                      0,
+                  sectionBannerList?[(sectionDataProvider.cBannerIndex ?? 0)]
+                          .videoType ??
+                      0,
+                  sectionBannerList?[(sectionDataProvider.cBannerIndex ?? 0)]
+                          .typeId ??
+                      0,
+                );
+              },
+              child: Stack(
+                alignment: AlignmentDirectional.bottomCenter,
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: Dimens.getBannerHeight(context),
+                    margin: const EdgeInsets.only(bottom: 15),
+                    child: MyNetworkImage(
+                      imageUrl: sectionBannerList?[
+                                  (sectionDataProvider.cBannerIndex ?? 0)]
+                              .thumbnail ??
+                          "",
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                  /* Top Gradient */
+                  Container(
+                    padding: const EdgeInsets.all(0),
+                    width: MediaQuery.of(context).size.width,
+                    height: Dimens.getBannerHeight(context),
+                    alignment: Alignment.topCenter,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.center,
+                        colors: [
+                          appBgColor.withValues(alpha: 0.9),
+                          appBgColor.withValues(alpha: 0.5),
+                          appBgColor.withValues(alpha: 0.1),
+                          transparent,
+                          transparent,
+                          transparent,
+                        ],
+                      ),
+                    ),
+                  ),
+                  /* Bottom Gradient */
+                  Container(
+                    padding: const EdgeInsets.all(0),
+                    width: MediaQuery.of(context).size.width,
+                    height: Dimens.getBannerHeight(context),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.center,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          transparent,
+                          transparent,
+                          transparent,
+                          transparent,
+                          appBgColor.withValues(alpha: 0.1),
+                          appBgColor.withValues(alpha: 0.3),
+                          appBgColor.withValues(alpha: 0.5),
+                          appBgColor.withValues(alpha: 0.7),
+                          appBgColor.withValues(alpha: 0.9),
+                          appBgColor,
+                          appBgColor,
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(width: 5),
-          ],
-          MyText(
-            color: white,
-            text: label,
-            multilanguage: false,
-            fontsizeNormal: 10,
-            fontsizeWeb: 11,
-            fontweight: FontWeight.w700,
-            maxline: 1,
-            overflow: TextOverflow.ellipsis,
-            textalign: TextAlign.start,
-            fontstyle: FontStyle.normal,
+          ),
+          /* Text */
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: Dimens.getBannerHeight(context),
+            child: CarouselSlider.builder(
+              itemCount: (sectionBannerList?.length ?? 0),
+              carouselController: carouselController,
+              options: CarouselOptions(
+                initialPage: 0,
+                height: Dimens.getBannerHeight(context),
+                enlargeCenterPage: false,
+                enableInfiniteScroll:
+                    (sectionBannerList?.length ?? 0) > 1 ? true : false,
+                autoPlay: true,
+                autoPlayCurve: Curves.linear,
+                autoPlayInterval:
+                    Duration(milliseconds: Constant.bannerDuration),
+                autoPlayAnimationDuration:
+                    Duration(milliseconds: Constant.animationDuration),
+                viewportFraction: 1.0,
+                onPageChanged: (val, _) async {
+                  sectionDataProvider.setCurrentBanner(val);
+                },
+              ),
+              itemBuilder:
+                  (BuildContext context, int index, int pageViewIndex) {
+                return InkWell(
+                  focusColor: white,
+                  borderRadius: BorderRadius.circular(0),
+                  onTap: () {
+                    printLog("Clicked on index ==> $index");
+                    openDetailPage(
+                      sectionBannerList?[index].id ?? 0,
+                      sectionBannerList?[index].subVideoType ?? 0,
+                      sectionBannerList?[index].videoType ?? 0,
+                      sectionBannerList?[index].typeId ?? 0,
+                    );
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.fromLTRB(5, 5, 5, 50),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        /* Name */
+                        Container(
+                          margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                          child: MyText(
+                            color: white,
+                            text: (sectionBannerList?[index].name != null &&
+                                    sectionBannerList?[index].name != "")
+                                ? (sectionBannerList?[index].name ?? "")
+                                : "-",
+                            textalign: TextAlign.center,
+                            fontsizeNormal: 23,
+                            fontsizeWeb: 23,
+                            fontweight: FontWeight.w700,
+                            multilanguage: false,
+                            maxline: 2,
+                            overflow: TextOverflow.ellipsis,
+                            fontstyle: FontStyle.normal,
+                            withShaderMask: true,
+                            isShadowText: true,
+                          ),
+                        ),
+
+                        /* Languages */
+                        Container(
+                          margin: const EdgeInsets.fromLTRB(20, 5, 20, 0),
+                          alignment: Alignment.center,
+                          child: MyText(
+                            color: white,
+                            text: (sectionBannerList?[index].totalLanguage !=
+                                        null &&
+                                    (sectionBannerList?[index].totalLanguage ??
+                                            0) >
+                                        0)
+                                ? ("${(sectionBannerList?[index].totalLanguage ?? 0)} ${((sectionBannerList?[index].totalLanguage ?? 0) == 1) ? "Language" : "Languages"}")
+                                : "-",
+                            textalign: TextAlign.center,
+                            fontsizeNormal: 12,
+                            fontsizeWeb: 14,
+                            fontweight: FontWeight.w600,
+                            multilanguage: false,
+                            maxline: 1,
+                            overflow: TextOverflow.ellipsis,
+                            fontstyle: FontStyle.normal,
+                            isShadowText: true,
+                          ),
+                        ),
+                        /* Category */
+                        Container(
+                          margin: const EdgeInsets.fromLTRB(20, 3, 20, 30),
+                          alignment: Alignment.center,
+                          child: MyText(
+                            color: white,
+                            text: (sectionBannerList?[index].categoryName !=
+                                        null &&
+                                    sectionBannerList?[index].categoryName !=
+                                        "")
+                                ? ((sectionBannerList?[index].categoryName ??
+                                        "")
+                                    .replaceAll(
+                                        RegExp('[,]'), ' ${Constant.dotText}'))
+                                : "-",
+                            textalign: TextAlign.center,
+                            fontsizeNormal: 12,
+                            fontsizeWeb: 14,
+                            fontweight: FontWeight.w700,
+                            multilanguage: false,
+                            maxline: 2,
+                            overflow: TextOverflow.ellipsis,
+                            fontstyle: FontStyle.normal,
+                            isShadowText: true,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          /* Buttons & Dots */
+          Positioned(
+            bottom: 0,
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  /* Watch Now */
+                  _buildBannerWatchNow(
+                      sectionDataProvider.cBannerIndex ?? 0, sectionBannerList),
+                  /* Dots */
+                  AnimatedSmoothIndicator(
+                    count: (sectionBannerList?.length ?? 0),
+                    activeIndex: sectionDataProvider.cBannerIndex ?? 0,
+                    effect: const ScrollingDotsEffect(
+                      spacing: 8,
+                      radius: 4,
+                      activeDotScale: 1.2,
+                      activeDotColor: colorPrimary,
+                      dotColor: defaultIconColor,
+                      dotHeight: 6,
+                      dotWidth: 6,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
+  }
+
+  Widget _buildBannerWatchNow(
+      int index, List<banner.Result>? sectionBannerList) {
+    return Container(
+      height: 40,
+      alignment: Alignment.center,
+      margin: const EdgeInsets.fromLTRB(15, 15, 15, 13),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          /* Watch Now */
+          if ((sectionBannerList?[index].isPremium ?? 0) == 1 &&
+              (sectionBannerList?[index].isBuy ?? 0) == 0)
+            InkWell(
+              onTap: () {
+                Utils.openSubscription(
+                  context: context,
+                  oldPage: RoutesConstant.homePage,
+                );
+              },
+              focusColor: white,
+              borderRadius: BorderRadius.circular(8),
+              child: FittedBox(
+                child: Container(
+                  height: 40,
+                  padding: const EdgeInsets.fromLTRB(15, 2, 15, 2),
+                  decoration: BoxDecoration(
+                    color: secondaryBgColor,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      MyImage(
+                        width: 15,
+                        height: 15,
+                        imagePath: "ic_subscribe.png",
+                        color: white,
+                      ),
+                      const SizedBox(width: 8),
+                      MyText(
+                        color: white,
+                        text: "subscribe",
+                        multilanguage: true,
+                        textalign: TextAlign.start,
+                        fontsizeNormal: 13,
+                        fontweight: FontWeight.w600,
+                        fontsizeWeb: 17,
+                        maxline: 1,
+                        overflow: TextOverflow.ellipsis,
+                        fontstyle: FontStyle.normal,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            )
+          else
+            InkWell(
+              onTap: () {
+                openDetailPage(
+                  sectionBannerList?[index].id ?? 0,
+                  sectionBannerList?[index].subVideoType ?? 0,
+                  sectionBannerList?[index].videoType ?? 0,
+                  sectionBannerList?[index].typeId ?? 0,
+                );
+              },
+              focusColor: white,
+              borderRadius: BorderRadius.circular(8),
+              child: FittedBox(
+                child: Container(
+                  height: 40,
+                  padding: const EdgeInsets.fromLTRB(15, 2, 15, 2),
+                  decoration: BoxDecoration(
+                    color: secondaryBgColor,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      MyImage(
+                        width: 15,
+                        height: 15,
+                        imagePath: "ic_play.png",
+                      ),
+                      const SizedBox(width: 15),
+                      MyText(
+                        color: white,
+                        text: "watch_now",
+                        multilanguage: true,
+                        textalign: TextAlign.start,
+                        fontsizeNormal: 13,
+                        fontweight: FontWeight.w600,
+                        fontsizeWeb: 17,
+                        maxline: 1,
+                        overflow: TextOverflow.ellipsis,
+                        fontstyle: FontStyle.normal,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          const SizedBox(width: 10),
+          /* Add to Watchlist */
+          InkWell(
+            onTap: () async {
+              if (Constant.userID != null) {
+                await sectionDataProvider.setBookMark(
+                    context, (sectionDataProvider.cBannerIndex ?? 0));
+              } else {
+                await Utils.openLogin(context: context, newPage: "");
+              }
+            },
+            focusColor: white,
+            borderRadius: BorderRadius.circular(8),
+            child: FittedBox(
+              child: Container(
+                height: 40,
+                width: 40,
+                decoration: BoxDecoration(
+                  color: secondaryBgColor,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: const EdgeInsets.all(11),
+                child: MyImage(
+                  imagePath: (sectionBannerList?[
+                                      (sectionDataProvider.cBannerIndex ?? 0)]
+                                  .isBookmark ??
+                              0) ==
+                          1
+                      ? "ic_tick.png"
+                      : "ic_plus.png",
+                  color: white,
+                ),
+              ),
+            ),
           ),
         ],
       ),
     );
   }
-
-  Widget _buildBannerMetaRow(banner.Result item) {
-    final List<String> parts = [];
-    if ((item.totalLanguage ?? 0) > 0) {
-      parts.add(
-        "${item.totalLanguage} "
-        "${(item.totalLanguage ?? 0) == 1 ? 'Language' : 'Languages'}",
-      );
-    }
-    if ((item.categoryName ?? "").trim().isNotEmpty) {
-      parts.addAll(
-        (item.categoryName ?? "")
-            .split(",")
-            .map((e) => e.trim())
-            .where((e) => e.isNotEmpty),
-      );
-    }
-    if (parts.isEmpty) return const SizedBox.shrink();
-    return MyText(
-      color: white.withValues(alpha: 0.75),
-      text: parts.join("  •  "),
-      textalign: TextAlign.center,
-      fontsizeNormal: 12,
-      fontsizeWeb: 14,
-      fontweight: FontWeight.w500,
-      multilanguage: false,
-      maxline: 5,
-      overflow: TextOverflow.ellipsis,
-      fontstyle: FontStyle.normal,
-      isShadowText: true,
-    );
-  }
-
-  Widget _buildBannerCircleBtn({
-    required String iconPath,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(24),
-      child: Container(
-        width: 42,
-        height: 42,
-        decoration: BoxDecoration(
-          color: white.withValues(alpha: 0.20),
-          shape: BoxShape.circle,
-          border: Border.all(color: white.withValues(alpha: 0.10), width: 1),
-        ),
-        padding: const EdgeInsets.all(12),
-        child: MyImage(imagePath: iconPath, color: white),
-      ),
-    );
-  }
-
   /* **************** Banner END */
 
   /* Sections START ************** */

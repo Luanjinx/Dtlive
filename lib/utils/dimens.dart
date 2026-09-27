@@ -220,7 +220,6 @@ class Dimens {
     if (kIsWeb) {
       return (MediaQuery.of(context).size.width / portRatio);
     }
-    // Set exactly to landRatio (same as detail page) so Landscape Image fits perfectly without cropping.
-    return (MediaQuery.of(context).size.width / landRatio);
+    return ((MediaQuery.of(context).size.height) * 0.52);
   }
 }
