@@ -1,8 +1,10 @@
+import '../model/sectionlistmodel.dart' as section;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_grid_list/responsive_grid_list.dart';
 
 import '../provider/homeprovider.dart';
+import '../provider/sectionbytypeprovider.dart';
 import '../routes/routes_constant.dart';
 import '../shimmer/shimmerutils.dart';
 import '../utils/color.dart';
@@ -21,18 +23,37 @@ class LiveTv extends StatefulWidget {
 
 class LiveTvState extends State<LiveTv> {
   late HomeProvider homeProvider;
+  late SectionByTypeProvider sectionByTypeProvider;
+  
+  List<section.Datum> allLiveTvVideos = [];
 
   @override
   void initState() {
     super.initState();
     homeProvider = Provider.of<HomeProvider>(context, listen: false);
+    sectionByTypeProvider = Provider.of<SectionByTypeProvider>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _getData();
     });
   }
 
   Future<void> _getData() async {
-    await homeProvider.getChannel();
+    final typeId = Constant.liveTvContentType;
+    if (typeId != 0) {
+      await sectionByTypeProvider.getSectionList(typeId.toString(), "2", 1);
+      
+      allLiveTvVideos.clear();
+      if (sectionByTypeProvider.sectionListModel.status == 200 && sectionByTypeProvider.sectionListModel.result != null) {
+        for (var sec in sectionByTypeProvider.sectionListModel.result!) {
+          if (sec.data != null) {
+            allLiveTvVideos.addAll(sec.data!);
+          }
+        }
+      }
+      if (mounted) {
+        setState(() {});
+      }
+    }
   }
 
   @override
@@ -41,9 +62,9 @@ class LiveTvState extends State<LiveTv> {
       backgroundColor: appBgColor,
       appBar: Utils.myAppBar(context, "Live TV", false),
       body: SafeArea(
-        child: Consumer<HomeProvider>(
-          builder: (context, homeProvider, child) {
-            if (homeProvider.loading) {
+        child: Consumer<SectionByTypeProvider>(
+          builder: (context, sectionProvider, child) {
+            if (sectionProvider.loadingSection) {
               return ShimmerUtils.responsiveGrid2(
                 context,
                 Dimens.heightPortOther,
@@ -54,9 +75,7 @@ class LiveTvState extends State<LiveTv> {
                 12,
               );
             } else {
-              if (homeProvider.channelModel.status == 200 &&
-                  homeProvider.channelModel.result != null &&
-                  (homeProvider.channelModel.result?.length ?? 0) > 0) {
+              if (allLiveTvVideos.isNotEmpty) {
                 return RefreshIndicator(
                   backgroundColor: white,
                   color: complimentryColor,
@@ -78,7 +97,7 @@ class LiveTvState extends State<LiveTv> {
                         physics: const NeverScrollableScrollPhysics(),
                       ),
                       children: List.generate(
-                        homeProvider.channelModel.result?.length ?? 0,
+                        allLiveTvVideos.length,
                         (position) {
                           return Material(
                             type: MaterialType.transparency,
@@ -91,10 +110,10 @@ class LiveTvState extends State<LiveTv> {
                                 onTap: () {
                                   Utils.openDetails(
                                     context: context,
-                                    videoId: homeProvider.channelModel.result?[position].id ?? 0,
-                                    subVideoType: 0,
-                                    videoType: Constant.liveTvContentType,
-                                    typeId: Constant.liveTvContentType,
+                                    videoId: allLiveTvVideos[position].id ?? 0,
+                                    subVideoType: allLiveTvVideos[position].subVideoType ?? 0,
+                                    videoType: allLiveTvVideos[position].videoType ?? 0,
+                                    typeId: allLiveTvVideos[position].typeId ?? 0,
                                     newPage: RoutesConstant.contentDetailsPage,
                                     oldPage: "",
                                     reqText: "",
@@ -109,7 +128,7 @@ class LiveTvState extends State<LiveTv> {
                                     height: Dimens.heightPortOther,
                                     alignment: Alignment.center,
                                     child: MyNetworkImage(
-                                      imageUrl: homeProvider.channelModel.result?[position].portraitImg ?? "",
+                                      imageUrl: allLiveTvVideos[position].portraitImg ?? "",
                                       fit: BoxFit.cover,
                                       height: MediaQuery.of(context).size.height,
                                       width: MediaQuery.of(context).size.width,

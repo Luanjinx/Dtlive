@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../widget/myimage.dart';
+import '../shimmer/shimmerwidget.dart';
 
 // ignore: must_be_immutable
 class MyNetworkImage extends StatefulWidget {
@@ -64,15 +65,9 @@ class _MyNetworkImageState extends State<MyNetworkImage> {
             if (loadingProgress == null) {
               return child;
             }
-            return MyImage(
-              width: widget.width,
-              height: widget.height,
-              imagePath: ((widget.height ?? 0) > (widget.width ?? 0))
-                  ? "no_image_port.png"
-                  : "no_image_land.png",
-              fit: ((widget.height ?? 0) > (widget.width ?? 0))
-                  ? BoxFit.fitWidth
-                  : BoxFit.cover,
+            return ShimmerWidget.roundcorner(
+              width: widget.width ?? double.infinity,
+              height: widget.height ?? 0,
             );
           },
           errorBuilder: (context, error, stackTrace) {
@@ -102,13 +97,9 @@ class _MyNetworkImageState extends State<MyNetworkImage> {
           ),
         ),
         placeholder: (context, url) {
-          return MyImage(
-            width: widget.width,
-            height: widget.height,
-            imagePath: ((widget.width ?? 0) > (widget.height ?? 0))
-                ? "no_image_land.png"
-                : "no_image_port.png",
-            fit: BoxFit.cover,
+          return ShimmerWidget.roundcorner(
+            width: widget.width ?? double.infinity,
+            height: widget.height ?? 0,
           );
         },
         errorWidget: (context, url, error) {

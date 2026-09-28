@@ -119,6 +119,7 @@ class _PlayerVideoState extends State<PlayerVideo>
   static const int safeStartDelayMs = 3000;
 
   bool _hasShownNextEpisodePopup = false;
+  bool _isSwitchingEpisode = false;
   int _initialPositionMs = 0;
   double _popupOpacity = 1.0;
   double _countdownProgress = 1.0; // 1.0 = full bar, 0.0 = empty
@@ -776,7 +777,9 @@ class _PlayerVideoState extends State<PlayerVideo>
       _adsManager?.pause();
       _adsManager?.destroy();
       _adsManager = null;
-      OrientationManager.forcePortrait();
+      if (!_isSwitchingEpisode) {
+        OrientationManager.forcePortrait();
+      }
     } else {
       _jsHelper.callBrowserFullscreen(false);
     }
@@ -906,6 +909,7 @@ class _PlayerVideoState extends State<PlayerVideo>
     );
 
     if (!mounted || !context.mounted) return;
+    _isSwitchingEpisode = true;
     if (kIsWeb) {
       context.pushReplacement(
         "/${RoutesConstant.playerPage}",
