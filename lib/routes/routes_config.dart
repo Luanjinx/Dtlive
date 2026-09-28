@@ -17,7 +17,7 @@ import '../routes/routes_constant.dart';
 import '../subscription/mysubscribedplan.dart';
 import '../subscription/subscription.dart';
 import '../subscription/subscriptionhistory.dart';
-import '../webpages/weblivetvdetails.dart';
+
 import '../webpages/webmyspace.dart';
 import '../webpages/webprofile.dart';
 import '../webpages/webprofileavatar.dart';
@@ -206,29 +206,6 @@ class RoutesConfig {
             videoType: videoType,
             typeId: typeId,
             subVideoType: 0,
-          );
-        },
-      ),
-
-      /* Live TV Details */
-      GoRoute(
-        path: '/${RoutesConstant.liveTvDetailsPage}/:videotype/:typeid/:videoid/:subvideotype',
-        builder: (context, state) {
-          final videoTypeStr = state.pathParameters['videotype'];
-          final typeIdStr = state.pathParameters['typeid'];
-          final videoIdStr = state.pathParameters['videoid'];
-          final subVideoTypeStr = state.pathParameters['subvideotype'];
-
-          final int videoType = int.tryParse(videoTypeStr ?? "0") ?? 0;
-          final int typeId = int.tryParse(typeIdStr ?? "0") ?? 0;
-          final int videoId = int.tryParse(videoIdStr ?? "0") ?? 0;
-          final int subVideoType = int.tryParse(subVideoTypeStr ?? "0") ?? 0;
-
-          return WebLiveTvDetails(
-            videoId,
-            videoType,
-            typeId,
-            subVideoType,
           );
         },
       ),

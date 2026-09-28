@@ -47,7 +47,7 @@ import '../players/player_video.dart';
 import '../players/player_vimeo.dart';
 import '../players/player_youtube.dart';
 import '../pages/contentshowdetails.dart';
-import '../pages/livetvdetails.dart';
+
 import '../players/model/vdociphermodel.dart';
 import '../provider/mysubscribedplanprovider.dart';
 import '../provider/playerprovider.dart';
@@ -714,11 +714,6 @@ class Utils {
               extra: extraParams,
             );
           }
-        } else if (typeId == Constant.liveTvContentType) {
-          context.go(
-            "/${RoutesConstant.liveTvDetailsPage}/$videoType/$typeId/$videoId/$subVideoType",
-            extra: extraParams,
-          );
         } else {
           // Details Page Path => /details/:videotype/:typeid/:videoid/:subvideotype
           context.go(
@@ -739,13 +734,7 @@ class Utils {
 
     if (!(context.mounted)) return;
 
-    if (typeId == Constant.liveTvContentType) {
-      videoDetailsProvider.setLoading(true);
-      await navigateTo(
-        () => LiveTvDetails(videoId, subVideoType, videoType, typeId),
-      );
-      return;
-    }
+
 
     switch (videoType) {
       case 5:
@@ -833,11 +822,6 @@ class Utils {
               extra: extraParams,
             );
           }
-        } else if (typeId == Constant.liveTvContentType) {
-          context.go(
-            "/${RoutesConstant.liveTvDetailsPage}/$videoType/$typeId/$videoId/$subVideoType",
-            extra: extraParams,
-          );
         } else {
           // Details Page Path => /details/:videotype/:typeid/:videoid/:subvideotype
           context.go(
@@ -858,13 +842,7 @@ class Utils {
 
     if (!(context.mounted)) return;
 
-    if (typeId == Constant.liveTvContentType) {
-      videoDetailsProvider.setLoading(true);
-      await navigateTo(
-        () => LiveTvDetails(videoId, subVideoType, videoType, typeId),
-      );
-      return;
-    }
+
 
     switch (videoType) {
       case 5:

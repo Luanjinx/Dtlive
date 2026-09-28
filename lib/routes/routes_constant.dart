@@ -7,7 +7,6 @@ class RoutesConstant {
   static const String sectionDetailsPage = "sections";
   static const String relatedContentPage = "related";
   static const String contentDetailsPage = "details";
-  static const String liveTvDetailsPage = "livetvdetails";
   static const String clipsPage = "clips";
   static const String clipsEpisodesPage = "shorts";
   static const String videoByCatPage = "bycategory";
@@ -21,6 +20,7 @@ class RoutesConstant {
   static const String myProfilePage = "profile";
   static const String mySpacePage = "myspace";
   static const String myWatchlistPage = "watchlist";
+  static const String continueWatchPage = "continuewatch";
   static const String cannotWatchPage = "cannotwatch";
 
   /* Web Login Pages */
