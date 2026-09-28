@@ -714,6 +714,11 @@ class Utils {
               extra: extraParams,
             );
           }
+        } else if (typeId == Constant.liveTvContentType) {
+          context.go(
+            "/${RoutesConstant.liveTvDetailsPage}/$videoType/$typeId/$videoId/$subVideoType",
+            extra: extraParams,
+          );
         } else {
           // Details Page Path => /details/:videotype/:typeid/:videoid/:subvideotype
           context.go(
@@ -828,6 +833,11 @@ class Utils {
               extra: extraParams,
             );
           }
+        } else if (typeId == Constant.liveTvContentType) {
+          context.go(
+            "/${RoutesConstant.liveTvDetailsPage}/$videoType/$typeId/$videoId/$subVideoType",
+            extra: extraParams,
+          );
         } else {
           // Details Page Path => /details/:videotype/:typeid/:videoid/:subvideotype
           context.go(

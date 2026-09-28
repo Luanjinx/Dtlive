@@ -210,6 +210,29 @@ class RoutesConfig {
         },
       ),
 
+      /* Live TV Details */
+      GoRoute(
+        path: '/${RoutesConstant.liveTvDetailsPage}/:videotype/:typeid/:videoid/:subvideotype',
+        builder: (context, state) {
+          final videoTypeStr = state.pathParameters['videotype'];
+          final typeIdStr = state.pathParameters['typeid'];
+          final videoIdStr = state.pathParameters['videoid'];
+          final subVideoTypeStr = state.pathParameters['subvideotype'];
+
+          final int videoType = int.tryParse(videoTypeStr ?? "0") ?? 0;
+          final int typeId = int.tryParse(typeIdStr ?? "0") ?? 0;
+          final int videoId = int.tryParse(videoIdStr ?? "0") ?? 0;
+          final int subVideoType = int.tryParse(subVideoTypeStr ?? "0") ?? 0;
+
+          return WebLiveTvDetails(
+            videoId,
+            videoType,
+            typeId,
+            subVideoType,
+          );
+        },
+      ),
+
       /* Video/Show Details */
       GoRoute(
         path:
@@ -244,18 +267,6 @@ class RoutesConfig {
               ? subVideoType == Constant.showContentType
               : videoType == Constant.showContentType;
 
-          if (typeId == Constant.liveTvContentType) {
-            return WebLiveTvDetails(
-              videoId,
-              subVideoType,
-              videoType,
-              typeId,
-              newPage: RoutesConstant.contentDetailsPage,
-              oldPage: newPage,
-              reqText: "deeplink",
-              key: ValueKey("$videoId$videoType$typeId$subVideoType"),
-            );
-          }
 
           return isShowDetails
               ? WebContentShowDetails(
@@ -306,18 +317,6 @@ class RoutesConfig {
 
           final bool isShowDetails = (videoType == Constant.showContentType);
 
-          if (typeId == Constant.liveTvContentType) {
-            return WebLiveTvDetails(
-              videoId,
-              0,
-              videoType,
-              typeId,
-              newPage: RoutesConstant.contentDetailsPage,
-              oldPage: newPage,
-              reqText: "deeplink",
-              key: ValueKey("$videoId$videoType$typeId"),
-            );
-          }
 
           return isShowDetails
               ? WebContentShowDetails(

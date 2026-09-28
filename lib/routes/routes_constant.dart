@@ -6,8 +6,8 @@ class RoutesConstant {
   static const String searchPage = "search";
   static const String sectionDetailsPage = "sections";
   static const String relatedContentPage = "related";
-  static const String continueWatchPage = "continuewatching";
   static const String contentDetailsPage = "details";
+  static const String liveTvDetailsPage = "livetvdetails";
   static const String clipsPage = "clips";
   static const String clipsEpisodesPage = "shorts";
   static const String videoByCatPage = "bycategory";
