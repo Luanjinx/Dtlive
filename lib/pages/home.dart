@@ -1027,10 +1027,10 @@ class HomeState extends State<Home> {
       children: [
         /* Banner */
         if (sectionDataProvider.loadingBanner)
-          ShimmerUtils.bannerMobile(context)
+          Padding(padding: EdgeInsets.only(top: kToolbarHeight + MediaQuery.of(context).padding.top), child: ShimmerUtils.bannerMobile(context))
         else if (sectionDataProvider.sectionBannerModel.status == 200 &&
             sectionDataProvider.sectionBannerModel.result != null)
-          _mobileHomeBanner(sectionDataProvider.sectionBannerModel.result)
+          Padding(padding: EdgeInsets.only(top: kToolbarHeight + MediaQuery.of(context).padding.top), child: _mobileHomeBanner(sectionDataProvider.sectionBannerModel.result))
         else
           SafeArea(child: SizedBox(height: Dimens.homeTabHeightSmall)),
 
