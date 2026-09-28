@@ -4,12 +4,13 @@ importScripts('https://www.gstatic.com/firebasejs/10.7.0/firebase-messaging-comp
 
 // 2. Initialize
 firebase.initializeApp({
-    apiKey: "AIzaSyDH7SLoHkaSkvn8PSFbfi4P_zYUZjsZQvQ",
-    authDomain: "streamit-7bbe3.firebaseapp.com",
-    projectId: "streamit-7bbe3",
-    storageBucket: "streamit-7bbe3.firebasestorage.app",
-    messagingSenderId: "773450355985",
-    appId: "1:773450355985:web:27537a2b6ca4ea600ce8b0"
+    apiKey: "AIzaSyDevY_5B7lJZkFyiC6rZrqp2vwEzZm4tYE",
+  authDomain: "dtlive-541ce.firebaseapp.com",
+  projectId: "dtlive-541ce",
+  storageBucket: "dtlive-541ce.firebasestorage.app",
+  messagingSenderId: "303674087931",
+  appId: "1:303674087931:web:7b31081bd2e4ae7677135e",
+  measurementId: "G-RLXQYVNQ4Z"
 });
 
 // 3. Retrieve Messaging
