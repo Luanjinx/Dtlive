@@ -2704,7 +2704,7 @@ class LiveTvDetailsState extends State<LiveTvDetails>
                         videoId: datum.id ?? 0,
                         subVideoType: datum.subVideoType ?? 0,
                         videoType: datum.videoType ?? 0,
-                        typeId: datum.typeId ?? 0,
+                        typeId: widget.typeId,
                         newPage: RoutesConstant.contentDetailsPage,
                         oldPage: "",
                         reqText: "deeplink",
@@ -2918,3 +2918,4 @@ class LiveTvDetailsState extends State<LiveTvDetails>
 
 
 }
+

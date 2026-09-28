@@ -385,7 +385,7 @@ class WebLiveTvDetailsState extends State<WebLiveTvDetails>
             ? (videoDetailsProvider.contentDetailModel.result?[0].webPriceId
                       .toString() ??
                   '')
-            : (Platform.isIOS
+            : (defaultTargetPlatform == TargetPlatform.iOS
                   ? (videoDetailsProvider
                             .contentDetailModel
                             .result?[0]
@@ -2225,5 +2225,6 @@ class WebLiveTvDetailsState extends State<WebLiveTvDetails>
     }
   }
 }
+
 
 

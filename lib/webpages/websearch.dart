@@ -269,3 +269,4 @@ class WebSearchState extends State<WebSearch> {
     );
   }
 }
+

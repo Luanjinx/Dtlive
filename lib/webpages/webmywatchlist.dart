@@ -199,3 +199,4 @@ class WebMyWatchlistState extends State<WebMyWatchlist> {
     );
   }
 }
+

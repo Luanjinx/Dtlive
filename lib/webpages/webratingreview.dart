@@ -525,3 +525,4 @@ class _WebRatingReviewState extends State<WebRatingReview> {
     );
   }
 }
+

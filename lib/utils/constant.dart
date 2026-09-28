@@ -3,7 +3,7 @@ import '../model/subtitlemodel.dart';
 
 class Constant {
   static String baseUrl =
-      'http://nexstream.biz.id/public/api/'; // Replace with your API Path (Get from Admin panel)
+      'https://nexstream.biz.id/public/api/'; // Replace with your API Path (Get from Admin panel)
   static String apiToken =
       'DTLdcFLx12g5MIGu7deMJIJQTD56qcZx'; // Replace with your API Token (Get from Admin panel)
 
@@ -155,3 +155,4 @@ class Constant {
   static const String admobAdsStatus = "admob_status";
   /* ****** Dynamic App Setting Keys (general_setting API) */
 }
+

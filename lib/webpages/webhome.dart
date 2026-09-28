@@ -217,7 +217,7 @@ class WebHomeState extends State<WebHome> {
         subVideoType: (sectionList?[index].subVideoType ?? 0).toString(),
         rentProductId: (kIsWeb)
             ? (sectionList?[index].webPriceId.toString() ?? '')
-            : (Platform.isIOS
+            : (defaultTargetPlatform == TargetPlatform.iOS
                   ? (sectionList?[index].iosProductPackage.toString() ?? '')
                   : (sectionList?[index].androidProductPackage.toString() ??
                         '')),
@@ -2207,3 +2207,5 @@ class WebHomeState extends State<WebHome> {
     );
   }
 }
+
+

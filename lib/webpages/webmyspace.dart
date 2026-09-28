@@ -176,7 +176,7 @@ class WebMySpaceState extends State<WebMySpace> with RouteAware {
             .toString(),
         rentProductId: (kIsWeb)
             ? (continueWatchingList?[position].webPriceId.toString() ?? '')
-            : (Platform.isIOS
+            : (defaultTargetPlatform == TargetPlatform.iOS
                   ? (continueWatchingList?[position].iosProductPackage
                             .toString() ??
                         '')
@@ -1838,3 +1838,4 @@ class WebMySpaceState extends State<WebMySpace> with RouteAware {
     );
   }
 }
+

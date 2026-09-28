@@ -4,12 +4,12 @@ importScripts('https://www.gstatic.com/firebasejs/10.7.0/firebase-messaging-comp
 
 // 2. Initialize
 firebase.initializeApp({
-    apiKey: "XXXXXXXXXXXXXXXXXXXXXXXX",
-    authDomain: "XXXXXXXXXXXXXXXXXXXXXXXX",
-    projectId: "XXXXXXXXXXXXX",
-    storageBucket: "XXXXXXXXXXXXXXXXXXXXXXXX",
-    messagingSenderId: "XXXXXXXXXXXXXX",
-    appId: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+    apiKey: "AIzaSyDH7SLoHkaSkvn8PSFbfi4P_zYUZjsZQvQ",
+    authDomain: "streamit-7bbe3.firebaseapp.com",
+    projectId: "streamit-7bbe3",
+    storageBucket: "streamit-7bbe3.firebasestorage.app",
+    messagingSenderId: "773450355985",
+    appId: "1:773450355985:web:27537a2b6ca4ea600ce8b0"
 });
 
 // 3. Retrieve Messaging

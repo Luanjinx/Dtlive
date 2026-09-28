@@ -185,3 +185,4 @@ class _WebProfileAvatarState extends State<WebProfileAvatar> {
     }
   }
 }
+

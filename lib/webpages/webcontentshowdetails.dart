@@ -431,7 +431,7 @@ class WebContentShowDetailsState extends State<WebContentShowDetails>
               ? (showDetailsProvider.contentDetailModel.result?[0].webPriceId
                         .toString() ??
                     '')
-              : (Platform.isIOS
+              : (defaultTargetPlatform == TargetPlatform.iOS
                     ? (showDetailsProvider
                               .contentDetailModel
                               .result?[0]
@@ -2557,3 +2557,4 @@ class WebContentShowDetailsState extends State<WebContentShowDetails>
     }
   }
 }
+

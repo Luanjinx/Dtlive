@@ -1561,7 +1561,7 @@ class HomeState extends State<Home> {
                   sectionList,
                   index,
                 ),
-                child: setSectionData(sectionList: sectionList, index: index),
+                child: setSectionData(sectionList: sectionList, index: index, sectionTypeId: sectionList?[index].typeId ?? 0),
               ),
               const SizedBox(height: 25),
             ],
@@ -1684,6 +1684,7 @@ class HomeState extends State<Home> {
   Widget setSectionData({
     required List<list.Result>? sectionList,
     required int index,
+    int sectionTypeId = 0,
   }) {
     /* screen_layout =>  landscape, big_landscape, index_landscape, portrait, big_portrait, index_portrait, 
                          square, category, language, channel */
@@ -1691,36 +1692,43 @@ class HomeState extends State<Home> {
       return _buildLandscapeUI(
         sectionList?[index].videoType,
         sectionList?[index].data,
+        sectionTypeId: sectionTypeId,
       );
     } else if ((sectionList?[index].screenLayout ?? "") == "big_landscape") {
       return _buildLandscapeBigUI(
         sectionList?[index].videoType,
         sectionList?[index].data,
+        sectionTypeId: sectionTypeId,
       );
     } else if ((sectionList?[index].screenLayout ?? "") == "index_landscape") {
       return _buildLandscapeIndexUI(
         sectionList?[index].videoType,
         sectionList?[index].data,
+        sectionTypeId: sectionTypeId,
       );
     } else if ((sectionList?[index].screenLayout ?? "") == "portrait") {
       return _buildPortraitUI(
         sectionList?[index].videoType,
         sectionList?[index].data,
+        sectionTypeId: sectionTypeId,
       );
     } else if ((sectionList?[index].screenLayout ?? "") == "big_portrait") {
       return _buildPortraitBigUI(
         sectionList?[index].videoType,
         sectionList?[index].data,
+        sectionTypeId: sectionTypeId,
       );
     } else if ((sectionList?[index].screenLayout ?? "") == "index_portrait") {
       return _buildPortraitIndexUI(
         sectionList?[index].videoType,
         sectionList?[index].data,
+        sectionTypeId: sectionTypeId,
       );
     } else if ((sectionList?[index].screenLayout ?? "") == "square") {
       return _buildSquareUI(
         sectionList?[index].videoType,
         sectionList?[index].data,
+        sectionTypeId: sectionTypeId,
       );
     } else if ((sectionList?[index].screenLayout ?? "") == "shorts") {
       return _buildShortsUI(sectionList?[index].id, sectionList?[index].data);
@@ -1746,6 +1754,7 @@ class HomeState extends State<Home> {
       return _buildLandscapeUI(
         sectionList?[index].videoType,
         sectionList?[index].data,
+        sectionTypeId: sectionTypeId,
       );
     }
   }
@@ -1910,7 +1919,7 @@ class HomeState extends State<Home> {
   }
   /* **************** Continue Watching END */
 
-  Widget _buildLandscapeUI(int? videoType, List<Datum>? sectionDataList) {
+  Widget _buildLandscapeUI(int? videoType, List<Datum>? sectionDataList, {int sectionTypeId = 0}) {
     return ContentSectionWidget(
       items: sectionDataList,
       layout: ContentCardLayout.landscape,
@@ -1922,7 +1931,7 @@ class HomeState extends State<Home> {
           datum.id ?? 0,
           datum.subVideoType ?? 0,
           datum.videoType ?? 0,
-          datum.typeId ?? 0,
+          sectionTypeId != 0 ? sectionTypeId : (datum.typeId ?? 0),
         );
       },
       continueWatchingBuilder: (datum, index) =>
@@ -1930,7 +1939,7 @@ class HomeState extends State<Home> {
     );
   }
 
-  Widget _buildLandscapeIndexUI(int? videoType, List<Datum>? sectionDataList) {
+  Widget _buildLandscapeIndexUI(int? videoType, List<Datum>? sectionDataList, {int sectionTypeId = 0}) {
     return ContentSectionWidget(
       items: sectionDataList,
       layout: ContentCardLayout.indexLandscape,
@@ -1942,13 +1951,13 @@ class HomeState extends State<Home> {
           datum.id ?? 0,
           datum.subVideoType ?? 0,
           datum.videoType ?? 0,
-          datum.typeId ?? 0,
+          sectionTypeId != 0 ? sectionTypeId : (datum.typeId ?? 0),
         );
       },
     );
   }
 
-  Widget _buildLandscapeBigUI(int? videoType, List<Datum>? sectionDataList) {
+  Widget _buildLandscapeBigUI(int? videoType, List<Datum>? sectionDataList, {int sectionTypeId = 0}) {
     return ContentSectionWidget(
       items: sectionDataList,
       layout: ContentCardLayout.bigLandscape,
@@ -1960,7 +1969,7 @@ class HomeState extends State<Home> {
           datum.id ?? 0,
           datum.subVideoType ?? 0,
           datum.videoType ?? 0,
-          datum.typeId ?? 0,
+          sectionTypeId != 0 ? sectionTypeId : (datum.typeId ?? 0),
         );
       },
       continueWatchingBuilder: (datum, index) =>
@@ -1968,7 +1977,7 @@ class HomeState extends State<Home> {
     );
   }
 
-  Widget _buildPortraitUI(int? videoType, List<Datum>? sectionDataList) {
+  Widget _buildPortraitUI(int? videoType, List<Datum>? sectionDataList, {int sectionTypeId = 0}) {
     return ContentSectionWidget(
       items: sectionDataList,
       layout: ContentCardLayout.portrait,
@@ -1980,7 +1989,7 @@ class HomeState extends State<Home> {
           datum.id ?? 0,
           datum.subVideoType ?? 0,
           datum.videoType ?? 0,
-          datum.typeId ?? 0,
+          sectionTypeId != 0 ? sectionTypeId : (datum.typeId ?? 0),
         );
       },
       continueWatchingBuilder: (datum, index) =>
@@ -1988,7 +1997,7 @@ class HomeState extends State<Home> {
     );
   }
 
-  Widget _buildPortraitBigUI(int? videoType, List<Datum>? sectionDataList) {
+  Widget _buildPortraitBigUI(int? videoType, List<Datum>? sectionDataList, {int sectionTypeId = 0}) {
     return ContentSectionWidget(
       items: sectionDataList,
       layout: ContentCardLayout.bigPortrait,
@@ -2000,7 +2009,7 @@ class HomeState extends State<Home> {
           datum.id ?? 0,
           datum.subVideoType ?? 0,
           datum.videoType ?? 0,
-          datum.typeId ?? 0,
+          sectionTypeId != 0 ? sectionTypeId : (datum.typeId ?? 0),
         );
       },
       continueWatchingBuilder: (datum, index) =>
@@ -2008,7 +2017,7 @@ class HomeState extends State<Home> {
     );
   }
 
-  Widget _buildPortraitIndexUI(int? videoType, List<Datum>? sectionDataList) {
+  Widget _buildPortraitIndexUI(int? videoType, List<Datum>? sectionDataList, {int sectionTypeId = 0}) {
     return ContentSectionWidget(
       items: sectionDataList,
       layout: ContentCardLayout.indexPortrait,
@@ -2020,13 +2029,13 @@ class HomeState extends State<Home> {
           datum.id ?? 0,
           datum.subVideoType ?? 0,
           datum.videoType ?? 0,
-          datum.typeId ?? 0,
+          sectionTypeId != 0 ? sectionTypeId : (datum.typeId ?? 0),
         );
       },
     );
   }
 
-  Widget _buildSquareUI(int? videoType, List<Datum>? sectionDataList) {
+  Widget _buildSquareUI(int? videoType, List<Datum>? sectionDataList, {int sectionTypeId = 0}) {
     return ContentSectionWidget(
       items: sectionDataList,
       layout: ContentCardLayout.square,
@@ -2038,7 +2047,7 @@ class HomeState extends State<Home> {
           datum.id ?? 0,
           datum.subVideoType ?? 0,
           datum.videoType ?? 0,
-          datum.typeId ?? 0,
+          sectionTypeId != 0 ? sectionTypeId : (datum.typeId ?? 0),
         );
       },
       continueWatchingBuilder: (datum, index) =>
@@ -2169,4 +2178,7 @@ class HomeState extends State<Home> {
     );
   }
 }
+
+
+
 

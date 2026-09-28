@@ -2574,3 +2574,4 @@ class WebSettingsState extends State<WebSettings> with RouteAware {
     );
   }
 }
+

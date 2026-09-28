@@ -385,7 +385,7 @@ class WebContentVideoDetailsState extends State<WebContentVideoDetails>
             ? (videoDetailsProvider.contentDetailModel.result?[0].webPriceId
                       .toString() ??
                   '')
-            : (Platform.isIOS
+            : (defaultTargetPlatform == TargetPlatform.iOS
                   ? (videoDetailsProvider
                             .contentDetailModel
                             .result?[0]
@@ -2276,3 +2276,4 @@ class WebContentVideoDetailsState extends State<WebContentVideoDetails>
     }
   }
 }
+
