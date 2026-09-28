@@ -490,7 +490,7 @@ class HomeState extends State<Home> {
           },
         ),
         Scaffold(
-          backgroundColor: transparent,
+          backgroundColor: appBgColor,
       body: NotificationListener<ScrollNotification>(
         onNotification: (scrollNotification) {
           if (!nestedScrollController.hasClients) return false;
@@ -535,12 +535,12 @@ class HomeState extends State<Home> {
       automaticallyImplyLeading: false,
       toolbarHeight: kToolbarHeight,
       titleSpacing: 10,
-      backgroundColor: transparent,
+      backgroundColor: innerBoxIsScrolled ? appBgColor : transparent,
       flexibleSpace: AnimatedOpacity(
         duration: const Duration(milliseconds: 300),
         opacity: innerBoxIsScrolled ? 1.0 : 0.0,
         child: ClipRRect(
-          child: Container(color: appBgColor.withValues(alpha: 0.8)),
+          child: Container(color: appBgColor),
         ),
       ),
       leading: Container(
@@ -2169,3 +2169,4 @@ class HomeState extends State<Home> {
     );
   }
 }
+
