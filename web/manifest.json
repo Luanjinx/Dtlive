@@ -1,6 +1,6 @@
 {
-    "name": "Dramastream",
-    "short_name": "Dramastream",
+    "name": "yourappname",
+    "short_name": "yourappname",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

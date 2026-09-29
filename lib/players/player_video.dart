@@ -745,9 +745,13 @@ class _PlayerVideoState extends State<PlayerVideo>
       );
       if (response.statusCode == 200) {
         final body = utf8.decode(response.bodyBytes);
+        final subtitleUrl = Constant.subtitleUrls[0].subtitleUrl.toLowerCase();
+        final format = subtitleUrl.contains('.vtt')
+            ? SubtitleFormat.webvtt
+            : SubtitleFormat.srt;
         subtitleController = SubtitleController.string(
           body,
-          format: SubtitleFormat.srt,
+          format: format,
         );
         playerProvider.setSubtitles(
           subtitleController!.subtitles.map((e) {
@@ -1318,15 +1322,22 @@ class _PlayerVideoState extends State<PlayerVideo>
       playerProvider.setCurrentSubtitle(playerProvider.currentSubtitle);
 
       body = utf8.decode((await http.get(Uri.parse(subtitleUrl))).bodyBytes);
+      final format = subtitleUrl.toLowerCase().contains('.vtt')
+          ? SubtitleFormat.webvtt
+          : SubtitleFormat.srt;
       subtitleController = null;
       subtitleController = SubtitleController.string(
         body,
-        format: SubtitleFormat.srt,
+        format: format,
       );
 
       if (body != "") {
         _videoPlayerController.setClosedCaptionFile(
-          Future.value(SubRipCaptionFile(body)),
+          Future.value(
+            format == SubtitleFormat.webvtt
+                ? WebVTTCaptionFile(body)
+                : SubRipCaptionFile(body),
+          ),
         );
       }
 
@@ -1749,6 +1760,23 @@ class _PlayerVideoState extends State<PlayerVideo>
         // Controls overlay (animated)
         _buildControlsOverlay(isFinished: isFinished),
 
+        // Subtitle (shifts bottom position when controls visible)
+        if (playerProvider.subtitleOn &&
+            playerProvider.cSubtitleList != null &&
+            widget.playerModel.isLive == false)
+          Positioned(
+            bottom: _showControls ? 90 : 20,
+            left: 0,
+            right: 0,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeInOut,
+              child: Center(
+                child: _buildSubtitles(playerProvider.cSubtitleList!),
+              ),
+            ),
+          ),
+
         // [IMP-2] Buffering spinner — always shown when buffering, pixel-aligned
         // with play/pause button (68×68), visible even when controls are hidden
         if (_isControllerReady &&
@@ -1881,23 +1909,6 @@ class _PlayerVideoState extends State<PlayerVideo>
               child: IgnorePointer(
                 ignoring: !_showControls,
                 child: _buildCenterControls(isFinished: isFinished),
-              ),
-            ),
-
-          // Subtitle (shifts bottom position when controls visible)
-          if (playerProvider.subtitleOn &&
-              playerProvider.cSubtitleList != null &&
-              widget.playerModel.isLive == false)
-            Positioned(
-              bottom: _showControls ? 90 : 20,
-              left: 0,
-              right: 0,
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 250),
-                curve: Curves.easeInOut,
-                child: Center(
-                  child: _buildSubtitles(playerProvider.cSubtitleList!),
-                ),
               ),
             ),
 
