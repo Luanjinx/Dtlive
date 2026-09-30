@@ -2929,15 +2929,15 @@ class _PlayerVideoState extends State<PlayerVideo>
       transitionDuration: const Duration(milliseconds: 300),
       pageBuilder: (context, animation, secondaryAnimation) {
         return Align(
-          alignment: Alignment.centerLeft,
+          alignment: Alignment.center,
           child: Material(
             color: transparent,
             child: Container(
-              width: 340,
-              height: MediaQuery.of(context).size.height,
+              width: 320,
+              height: MediaQuery.of(context).size.height > 500 ? 450 : MediaQuery.of(context).size.height * 0.8,
               decoration: BoxDecoration(
                 color: lightBlack,
-                borderRadius: const BorderRadius.horizontal(right: Radius.circular(16)),
+                borderRadius: BorderRadius.circular(16),
               ),
               child: StatefulBuilder(
                 builder: (context, setStateSB) {
@@ -3021,12 +3021,12 @@ class _PlayerVideoState extends State<PlayerVideo>
         );
       },
       transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return SlideTransition(
-          position: Tween<Offset>(
-            begin: const Offset(-1, 0),
-            end: Offset.zero,
-          ).animate(animation),
-          child: child,
+        return FadeTransition(
+          opacity: animation,
+          child: ScaleTransition(
+            scale: Tween<double>(begin: 0.95, end: 1.0).animate(animation),
+            child: child,
+          ),
         );
       },
     ).then((_) {
