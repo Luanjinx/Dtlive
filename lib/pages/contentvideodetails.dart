@@ -599,7 +599,9 @@ class ContentVideoDetailsState extends State<ContentVideoDetails>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildRatingReviewCard(),
-                      if (widget.videoType == Constant.liveTvContentType)
+                      if (widget.videoType == Constant.liveTvContentType || 
+                          widget.videoType == Constant.channelContentType || 
+                          widget.videoType == Constant.channelType)
                         _buildLiveTvRecommendations(videoDetailsProvider)
                       else
                         RelatedVideoShow(
@@ -613,7 +615,9 @@ class ContentVideoDetailsState extends State<ContentVideoDetails>
                           videoType: widget.videoType,
                           typeId: widget.typeId,
                         ),
-                      if (widget.videoType != Constant.liveTvContentType) ...[
+                      if (!(widget.videoType == Constant.liveTvContentType || 
+                            widget.videoType == Constant.channelContentType || 
+                            widget.videoType == Constant.channelType)) ...[
                         CastCrew(
                           castList: videoDetailsProvider
                               .contentDetailModel
