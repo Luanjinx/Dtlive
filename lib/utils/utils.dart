@@ -3023,9 +3023,13 @@ class Utils {
 
     try {
       if (remainWatch > 0) {
+        double hours = (remainWatch / (1000 * 60 * 60));
         double minutes = ((remainWatch / (1000 * 60)) % 60);
         double seconds = ((remainWatch / 1000) % 60);
-        if (minutes >= 0 && minutes < 1) {
+        
+        if (hours >= 1) {
+          convTime = "${hours.toInt()} hr ${minutes.toInt()} min";
+        } else if (minutes >= 0 && minutes < 1) {
           convTime = "${seconds.toInt()} sec";
         } else if (minutes >= 1 && minutes < 10) {
           convTime = "0${minutes.toInt()} min";

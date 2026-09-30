@@ -490,7 +490,7 @@ class HomeState extends State<Home> {
           },
         ),
         Scaffold(
-          backgroundColor: appBgColor,
+          backgroundColor: transparent,
       body: NotificationListener<ScrollNotification>(
         onNotification: (scrollNotification) {
           if (!nestedScrollController.hasClients) return false;
@@ -1027,10 +1027,10 @@ class HomeState extends State<Home> {
       children: [
         /* Banner */
         if (sectionDataProvider.loadingBanner)
-          Padding(padding: EdgeInsets.only(top: kToolbarHeight + MediaQuery.of(context).padding.top), child: ShimmerUtils.bannerMobile(context))
+          ShimmerUtils.bannerMobile(context)
         else if (sectionDataProvider.sectionBannerModel.status == 200 &&
             sectionDataProvider.sectionBannerModel.result != null)
-          Padding(padding: EdgeInsets.only(top: kToolbarHeight + MediaQuery.of(context).padding.top), child: _mobileHomeBanner(sectionDataProvider.sectionBannerModel.result))
+          _mobileHomeBanner(sectionDataProvider.sectionBannerModel.result)
         else
           SafeArea(child: SizedBox(height: Dimens.homeTabHeightSmall)),
 
@@ -1103,27 +1103,7 @@ class HomeState extends State<Home> {
                       fit: BoxFit.fill,
                     ),
                   ),
-                  /* Top Gradient */
-                  Container(
-                    padding: const EdgeInsets.all(0),
-                    width: MediaQuery.of(context).size.width,
-                    height: Dimens.getBannerHeight(context),
-                    alignment: Alignment.topCenter,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.center,
-                        colors: [
-                          appBgColor.withValues(alpha: 0.9),
-                          appBgColor.withValues(alpha: 0.5),
-                          appBgColor.withValues(alpha: 0.1),
-                          transparent,
-                          transparent,
-                          transparent,
-                        ],
-                      ),
-                    ),
-                  ),
+                  /* Top Gradient (Removed) */
                   /* Bottom Gradient */
                   Container(
                     padding: const EdgeInsets.all(0),
