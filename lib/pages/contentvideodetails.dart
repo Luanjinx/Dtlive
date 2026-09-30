@@ -599,25 +599,30 @@ class ContentVideoDetailsState extends State<ContentVideoDetails>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildRatingReviewCard(),
-                      RelatedVideoShow(
-                        relatedDataList:
-                            videoDetailsProvider.relatedContentModel.result,
-                        newPage: '',
-                        oldPage: '',
-                        reqText: '',
-                        videoId: widget.videoId,
-                        subVideoType: widget.subVideoType,
-                        videoType: widget.videoType,
-                        typeId: widget.typeId,
-                      ),
-                      CastCrew(
-                        castList: videoDetailsProvider
-                            .contentDetailModel
-                            .result?[0]
-                            .cast,
-                        newPage: '',
-                      ),
-                      _buildDirector(),
+                      if (widget.videoType == Constant.liveTvContentType)
+                        _buildLiveTvRecommendations(videoDetailsProvider)
+                      else
+                        RelatedVideoShow(
+                          relatedDataList:
+                              videoDetailsProvider.relatedContentModel.result,
+                          newPage: '',
+                          oldPage: '',
+                          reqText: '',
+                          videoId: widget.videoId,
+                          subVideoType: widget.subVideoType,
+                          videoType: widget.videoType,
+                          typeId: widget.typeId,
+                        ),
+                      if (widget.videoType != Constant.liveTvContentType) ...[
+                        CastCrew(
+                          castList: videoDetailsProvider
+                              .contentDetailModel
+                              .result?[0]
+                              .cast,
+                          newPage: '',
+                        ),
+                        _buildDirector(),
+                      ],
                     ],
                   );
                 },
@@ -2861,4 +2866,63 @@ class ContentVideoDetailsState extends State<ContentVideoDetails>
   }
 
   /* ========= Open Player ========= */
+
+  Widget _buildLiveTvRecommendations(VideoDetailsProvider provider) {
+    final dataList = provider.relatedContentModel.result ?? [];
+
+    if (dataList.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: MyText(
+            color: white,
+            text: "other_channels",
+            multilanguage: true,
+            fontsizeNormal: 16,
+            fontsizeWeb: 16,
+            fontweight: FontWeight.w600,
+            textalign: TextAlign.start,
+            fontstyle: FontStyle.normal,
+            maxline: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        SizedBox(
+          height: 120,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            itemCount: dataList.length,
+            itemBuilder: (context, index) {
+              final channel = dataList[index];
+              return Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: InkWell(
+                  onTap: () {
+                    Utils.openDetails(
+                      context: context,
+                      videoId: channel.id ?? 0,
+                      videoType: channel.videoType ?? 0,
+                    );
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: MyNetworkImage(
+                      imageUrl: channel.landscape ?? '',
+                      fit: BoxFit.cover,
+                      width: 180,
+                      height: 120,
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
 }

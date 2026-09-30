@@ -2080,20 +2080,6 @@ class _PlayerVideoState extends State<PlayerVideo>
                 ],
               ),
             ),
-            // [NEW] FEATURE-6: Episodes panel button — show type only
-            if (widget.playerModel.playType == "Show" &&
-                (widget.playerModel.episodeList?.length ?? 0) > 1)
-              Tooltip(
-                message: 'Episodes',
-                child: IconButton(
-                  icon: Icon(
-                    Icons.playlist_play_rounded,
-                    color: white, // [IMP-4]
-                    size: 24,
-                  ),
-                  onPressed: _showEpisodePanel,
-                ),
-              ),
             // [NEW] FEATURE-2: Lock screen button
             Tooltip(
               message: _isScreenLocked ? 'Unlock' : 'Lock screen',
@@ -2120,7 +2106,14 @@ class _PlayerVideoState extends State<PlayerVideo>
             if (widget.playerModel.isLive == false &&
                 Constant.subtitleUrls.isNotEmpty)
               _buildSubtitleToggle(),
-            if (widget.playerModel.isLive == false) _buildOptionsButton(),
+            if (widget.playerModel.isLive == false)
+              Tooltip(
+                message: 'Settings',
+                child: IconButton(
+                  icon: Icon(Icons.settings, color: white, size: 22),
+                  onPressed: _showSettingsPanel,
+                ),
+              ),
           ],
         ),
       ),
@@ -2908,6 +2901,274 @@ class _PlayerVideoState extends State<PlayerVideo>
         ),
       ),
     );
+  }
+
+  void _showSettingsPanel() {
+    _hideTimer?.cancel();
+    
+    List<String> tabs = [];
+    if (widget.playerModel.playType == "Show" && (widget.playerModel.episodeList?.length ?? 0) > 1) {
+      tabs.add("Episodes");
+    }
+    if (Constant.resolutionsUrls.isNotEmpty) {
+      tabs.add("Quality");
+    }
+    if (Constant.subtitleUrls.isNotEmpty) {
+      tabs.add("Subtitle");
+    }
+
+    if (tabs.isEmpty) return;
+
+    int selectedIndex = 0;
+
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: "Settings",
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return Align(
+          alignment: Alignment.centerLeft,
+          child: Material(
+            color: transparent,
+            child: Container(
+              width: 340,
+              height: MediaQuery.of(context).size.height,
+              decoration: BoxDecoration(
+                color: lightBlack,
+                borderRadius: const BorderRadius.horizontal(right: Radius.circular(16)),
+              ),
+              child: StatefulBuilder(
+                builder: (context, setStateSB) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Header
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 24, 8, 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            MyText(
+                              color: white,
+                              text: "Settings",
+                              multilanguage: true,
+                              fontsizeNormal: 18,
+                              fontsizeWeb: 18,
+                              fontweight: FontWeight.w700,
+                              maxline: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textalign: TextAlign.start,
+                              fontstyle: FontStyle.normal,
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.close, color: white, size: 24),
+                              onPressed: () => Utils.exitDialog(context),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Tabs
+                      Row(
+                        children: List.generate(tabs.length, (index) {
+                          final isSelected = selectedIndex == index;
+                          return Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                setStateSB(() {
+                                  selectedIndex = index;
+                                });
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(
+                                      color: isSelected ? colorAccent : white.withValues(alpha: 0.12),
+                                      width: isSelected ? 2 : 1,
+                                    ),
+                                  ),
+                                ),
+                                alignment: Alignment.center,
+                                child: MyText(
+                                  color: isSelected ? colorAccent : white.withValues(alpha: 0.54),
+                                  text: tabs[index],
+                                  multilanguage: true,
+                                  fontsizeNormal: 15,
+                                  fontsizeWeb: 15,
+                                  fontweight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                                  maxline: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  textalign: TextAlign.center,
+                                  fontstyle: FontStyle.normal,
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                      // Content
+                      Expanded(
+                        child: _buildSettingsContent(tabs[selectedIndex]),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(-1, 0),
+            end: Offset.zero,
+          ).animate(animation),
+          child: child,
+        );
+      },
+    ).then((_) {
+      if (mounted && _videoPlayerController.value.isPlaying) {
+        _startHideTimer();
+      }
+    });
+  }
+
+  Widget _buildSettingsContent(String tabName) {
+    if (tabName == "Episodes") {
+      return ListView.builder(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        itemCount: widget.playerModel.episodeList?.length ?? 0,
+        itemBuilder: (_, i) {
+          final ep = widget.playerModel.episodeList![i];
+          final isCurrent = i == (widget.playerModel.currentEpiPos ?? 0);
+          return ListTile(
+            leading: ClipRRect(
+              borderRadius: BorderRadius.circular(6),
+              child: MyNetworkImage(
+                imageUrl: ep.landscape ?? "",
+                width: 72,
+                height: 44,
+                fit: BoxFit.cover,
+              ),
+            ),
+            title: MyText(
+              color: isCurrent ? colorAccent : white,
+              text: ep.name ?? ep.description ?? "Episode ${i + 1}",
+              multilanguage: false,
+              textalign: TextAlign.start,
+              fontsizeNormal: 13,
+              fontsizeWeb: 14,
+              fontweight: isCurrent ? FontWeight.w700 : FontWeight.w500,
+              maxline: 1,
+              overflow: TextOverflow.ellipsis,
+              fontstyle: FontStyle.normal,
+            ),
+            subtitle: isCurrent
+                ? MyText(
+                    color: colorAccent,
+                    text: "now_playing",
+                    multilanguage: true,
+                    fontsizeNormal: 11,
+                    fontsizeWeb: 12,
+                    fontweight: FontWeight.w400,
+                    maxline: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textalign: TextAlign.start,
+                    fontstyle: FontStyle.normal,
+                  )
+                : null,
+            trailing: isCurrent
+                ? Icon(
+                    Icons.play_arrow_rounded,
+                    color: colorAccent,
+                    size: 20,
+                  )
+                : null,
+            onTap: isCurrent
+                ? null
+                : () {
+                    Utils.exitDialog(context);
+                    _jumpToEpisode(i);
+                  },
+          );
+        },
+      );
+    } else if (tabName == "Quality") {
+      return ListView.builder(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        itemCount: Constant.resolutionsUrls.length,
+        itemBuilder: (_, i) {
+          final option = Constant.resolutionsUrls[i];
+          final isSelected = playerProvider.currentQuality == option.qualityName;
+          return ListTile(
+            title: MyText(
+              color: isSelected ? colorAccent : white.withValues(alpha: 0.7),
+              text: option.qualityName,
+              multilanguage: false,
+              textalign: TextAlign.start,
+              fontsizeNormal: 15,
+              fontsizeWeb: 15,
+              fontweight: isSelected ? FontWeight.w600 : FontWeight.w400,
+              maxline: 1,
+              overflow: TextOverflow.ellipsis,
+              fontstyle: FontStyle.normal,
+            ),
+            trailing: isSelected
+                ? Icon(
+                    Icons.check,
+                    color: colorAccent,
+                    size: 20,
+                  )
+                : null,
+            onTap: () {
+              if (isSelected) return;
+              Utils.exitDialog(context);
+              updateQualityUrl(qualityName: option.qualityName, qualityUrl: option.qualityUrl);
+            },
+          );
+        },
+      );
+    } else if (tabName == "Subtitle") {
+      return ListView.builder(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        itemCount: Constant.subtitleUrls.length,
+        itemBuilder: (_, i) {
+          final option = Constant.subtitleUrls[i];
+          final isSelected = playerProvider.currentSubtitle == option.subtitleLang;
+          return ListTile(
+            title: MyText(
+              color: isSelected ? colorAccent : white.withValues(alpha: 0.7),
+              text: option.subtitleLang,
+              multilanguage: false,
+              textalign: TextAlign.start,
+              fontsizeNormal: 15,
+              fontsizeWeb: 15,
+              fontweight: isSelected ? FontWeight.w600 : FontWeight.w400,
+              maxline: 1,
+              overflow: TextOverflow.ellipsis,
+              fontstyle: FontStyle.normal,
+            ),
+            trailing: isSelected
+                ? Icon(
+                    Icons.check,
+                    color: colorAccent,
+                    size: 20,
+                  )
+                : null,
+            onTap: () {
+              if (isSelected) return;
+              Utils.exitDialog(context);
+              playerProvider.setCurrentSubtitle(option.subtitleLang);
+              updateSubtitleUrl(subtitleUrl: option.subtitleUrl);
+            },
+          );
+        },
+      );
+    }
+    return const SizedBox.shrink();
   }
 
   GestureDetector _buildOptionsButton() {
