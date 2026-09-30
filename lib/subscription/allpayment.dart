@@ -743,7 +743,7 @@ class AllPaymentState extends State<AllPayment>
         }
       } else {
         if (!mounted) return;
-        Utils.showToast('Gagal mengunggah bukti pembayaran.');
+        Utils.showToast('Gagal (${response.statusCode}): $responseData');
       }
     } catch (e) {
       LoadingOverlay().hide();
