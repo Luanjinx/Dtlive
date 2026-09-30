@@ -2906,6 +2906,11 @@ class ContentVideoDetailsState extends State<ContentVideoDetails>
                       context: context,
                       videoId: channel.id ?? 0,
                       videoType: channel.videoType ?? 0,
+                      subVideoType: channel.subVideoType ?? 0,
+                      typeId: channel.typeId ?? 0,
+                      newPage: '',
+                      oldPage: '',
+                      reqText: '',
                     );
                   },
                   child: ClipRRect(

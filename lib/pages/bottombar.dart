@@ -9,7 +9,7 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import '../pages/rentstore.dart';
 import '../pages/clips.dart';
-import '../pages/livetv.dart';
+
 import '../main.dart';
 import '../pages/find.dart';
 import '../pages/home.dart';
