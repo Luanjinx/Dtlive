@@ -665,41 +665,110 @@ class AllPaymentState extends State<AllPayment>
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: Text("Transfer Bank / QRIS"),
-          content: SingleChildScrollView(
+        return Dialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          backgroundColor: secondaryBgColor,
+          elevation: 5,
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text("Total Tagihan: ${Constant.currencySymbol}${paymentProvider.finalAmount}", 
-                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                Text(
+                  "Transfer Bank / QRIS",
+                  style: TextStyle(
+                    color: titleTextColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 15),
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 15),
+                  decoration: BoxDecoration(
+                    color: appBgColor,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: colorPrimary.withOpacity(0.3), width: 1),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Total Tagihan:",
+                        style: TextStyle(color: descTextColor, fontSize: 14),
+                      ),
+                      Text(
+                        "${Constant.currencySymbol}${paymentProvider.finalAmount}",
+                        style: TextStyle(
+                          color: colorPrimary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 const SizedBox(height: 15),
                 if (imageUrl.isNotEmpty) ...[
-                  Image.network(imageUrl, height: 200, fit: BoxFit.contain),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.network(imageUrl, height: 200, fit: BoxFit.contain),
+                  ),
                   const SizedBox(height: 15),
                 ],
-                Text(instructions, textAlign: TextAlign.center),
-                const SizedBox(height: 20),
-                ElevatedButton.icon(
-                  icon: const Icon(Icons.upload_file),
-                  label: const Text('Unggah Bukti Transfer'),
-                  onPressed: () async {
-                    final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
-                    if (pickedFile != null) {
-                      Navigator.pop(dialogContext); // Tutup dialog
-                      _uploadProofToServer(File(pickedFile.path));
-                    }
-                  },
+                Text(
+                  instructions,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: descTextColor, fontSize: 14),
+                ),
+                const SizedBox(height: 25),
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: colorPrimary,
+                      foregroundColor: black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                    ),
+                    icon: const Icon(Icons.upload_file),
+                    label: const Text(
+                      'Unggah Bukti Transfer',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    ),
+                    onPressed: () async {
+                      final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+                      if (pickedFile != null) {
+                        final file = File(pickedFile.path);
+                        final sizeInBytes = await file.length();
+                        final sizeInMB = sizeInBytes / (1024 * 1024);
+
+                        if (!mounted) return;
+
+                        if (sizeInMB > 5) {
+                          Utils.showToast("Ukuran file maksimal 5MB.");
+                          return;
+                        }
+
+                        Navigator.pop(dialogContext); // Tutup dialog
+                        _uploadProofToServer(file);
+                      }
+                    },
+                  ),
+                ),
+                const SizedBox(height: 8),
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogContext),
+                  child: const Text(
+                    'Batal',
+                    style: TextStyle(color: descTextColor, fontSize: 14),
+                  ),
                 ),
               ],
             ),
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext),
-              child: const Text('Batal'),
-            ),
-          ],
         );
       },
     );
@@ -710,6 +779,8 @@ class AllPaymentState extends State<AllPayment>
     try {
       final url = Uri.parse(Constant.baseUrl + 'upload_payment_proof');
       var request = http.MultipartRequest('POST', url);
+      
+      request.headers['Api-Token'] = Constant.apiToken;
       
       // Mengirimkan token jika ada auth middleware. Di sini asumsinya token ditambahkan di headers
       // Jika diperlukan, tambahkan userId dsb. Tetapi di Laravel backend kita meminta `transaction_id`.
