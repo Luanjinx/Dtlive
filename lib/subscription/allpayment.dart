@@ -652,31 +652,47 @@ class AllPaymentState extends State<AllPayment>
   Future<void> _manualInit() async {
     final ImagePicker picker = ImagePicker();
     
+    final manualData = paymentProvider.paymentOptionModel.result?.manual;
+    final qrisImage = manualData?.key1 ?? "";
+    final instructions = manualData?.key2 ?? "Silakan transfer ke rekening yang tertera.";
+    
+    // Construct the image URL. Example: baseUrl is 'https://domain.com/public/api/'
+    // So the image is at 'https://domain.com/public/images/app/' + qrisImage
+    final imageUrl = qrisImage.isNotEmpty 
+        ? Constant.baseUrl.replaceAll('api/', '') + 'images/app/' + qrisImage
+        : "";
+
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: Text("Transfer Bank (Manual)"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text("Silakan transfer sejumlah ${Constant.currencySymbol}${paymentProvider.finalAmount} ke rekening berikut:"),
-              const SizedBox(height: 10),
-              Text("BCA: 1234-5678-90", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-              Text("a.n PT Streaming Makmur"),
-              const SizedBox(height: 20),
-              ElevatedButton.icon(
-                icon: const Icon(Icons.upload_file),
-                label: const Text('Unggah Bukti Transfer'),
-                onPressed: () async {
-                  final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
-                  if (pickedFile != null) {
-                    Navigator.pop(dialogContext); // Tutup dialog
-                    _uploadProofToServer(File(pickedFile.path));
-                  }
-                },
-              ),
-            ],
+          title: Text("Transfer Bank / QRIS"),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text("Total Tagihan: ${Constant.currencySymbol}${paymentProvider.finalAmount}", 
+                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                const SizedBox(height: 15),
+                if (imageUrl.isNotEmpty) ...[
+                  Image.network(imageUrl, height: 200, fit: BoxFit.contain),
+                  const SizedBox(height: 15),
+                ],
+                Text(instructions, textAlign: TextAlign.center),
+                const SizedBox(height: 20),
+                ElevatedButton.icon(
+                  icon: const Icon(Icons.upload_file),
+                  label: const Text('Unggah Bukti Transfer'),
+                  onPressed: () async {
+                    final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+                    if (pickedFile != null) {
+                      Navigator.pop(dialogContext); // Tutup dialog
+                      _uploadProofToServer(File(pickedFile.path));
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
           actions: [
             TextButton(
@@ -692,7 +708,7 @@ class AllPaymentState extends State<AllPayment>
   Future<void> _uploadProofToServer(File imageFile) async {
     LoadingOverlay().show(context);
     try {
-      final url = Uri.parse(Constant.baseurl + 'upload_payment_proof');
+      final url = Uri.parse(Constant.baseUrl + 'upload_payment_proof');
       var request = http.MultipartRequest('POST', url);
       
       // Mengirimkan token jika ada auth middleware. Di sini asumsinya token ditambahkan di headers

@@ -46,6 +46,7 @@ class Result {
     this.paystack,
     this.instamojo,
     this.cash,
+    this.manual,
   });
 
   PaymentGatewayData? inAppPurchage;
