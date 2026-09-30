@@ -60,14 +60,14 @@ class Dimens {
   static double bottomWebPadding = 70;
 
   /* Ratio */
-  static double portRatio = 0.8;
-  static double landRatio = 1.91;
+  static double portRatio = 0.7;
+  static double landRatio = 1.77;
   /* Ratio */
 
-  static double widthPort = 125;
-  static double heightPort = 180;
-  static double widthLand = 195;
-  static double heightLand = 120;
+  static double widthPort = 105;
+  static double heightPort = 150;
+  static double widthLand = 160;
+  static double heightLand = 90;
   static double widthPortOther = 125;
   static double heightPortOther = 175;
   static double widthPortOtherWeb = 224;

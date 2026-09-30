@@ -533,7 +533,7 @@ class HomeState extends State<Home> {
     return SliverAppBar(
       centerTitle: false,
       automaticallyImplyLeading: false,
-      toolbarHeight: kToolbarHeight,
+      toolbarHeight: 40,
       titleSpacing: 10,
       backgroundColor: innerBoxIsScrolled ? appBgColor : transparent,
       flexibleSpace: AnimatedOpacity(
@@ -544,7 +544,7 @@ class HomeState extends State<Home> {
         ),
       ),
       leading: Container(
-        height: kToolbarHeight,
+        height: 40,
         alignment: Alignment.centerLeft,
         padding: EdgeInsets.zero,
         child: MyImage(imagePath: "appicon.png"),
