@@ -490,7 +490,7 @@ class HomeState extends State<Home> {
           },
         ),
         Scaffold(
-          backgroundColor: transparent,
+          backgroundColor: appBgColor,
       body: NotificationListener<ScrollNotification>(
         onNotification: (scrollNotification) {
           if (!nestedScrollController.hasClients) return false;

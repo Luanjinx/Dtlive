@@ -58,6 +58,7 @@ class Result {
   PaymentGatewayData? paystack;
   PaymentGatewayData? instamojo;
   PaymentGatewayData? cash;
+  PaymentGatewayData? manual;
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
         inAppPurchage: json["inapppurchage"] == null
@@ -90,6 +91,9 @@ class Result {
         cash: json["cash"] == null
             ? PaymentGatewayData.fromJson({})
             : PaymentGatewayData.fromJson(json["cash"]),
+        manual: json["manual"] == null
+            ? PaymentGatewayData.fromJson({})
+            : PaymentGatewayData.fromJson(json["manual"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -104,6 +108,7 @@ class Result {
         "paystack": paystack == null ? {} : paystack?.toJson() ?? {},
         "instamojo": instamojo == null ? {} : instamojo?.toJson() ?? {},
         "cash": cash == null ? {} : cash?.toJson() ?? {},
+        "manual": manual == null ? {} : manual?.toJson() ?? {},
       };
 }
 

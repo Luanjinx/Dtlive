@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter_locales/flutter_locales.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -643,6 +644,94 @@ class AllPaymentState extends State<AllPayment>
     } else if (pgName == "cash") {
       if (!mounted) return;
       Utils.showToast(Locales.string(context, "cash_payment_msg"));
+    } else if (pgName == "manual") {
+      _manualInit();
+    }
+  }
+
+  Future<void> _manualInit() async {
+    final ImagePicker picker = ImagePicker();
+    
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text("Transfer Bank (Manual)"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text("Silakan transfer sejumlah ${Constant.currencySymbol}${paymentProvider.finalAmount} ke rekening berikut:"),
+              const SizedBox(height: 10),
+              Text("BCA: 1234-5678-90", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              Text("a.n PT Streaming Makmur"),
+              const SizedBox(height: 20),
+              ElevatedButton.icon(
+                icon: const Icon(Icons.upload_file),
+                label: const Text('Unggah Bukti Transfer'),
+                onPressed: () async {
+                  final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+                  if (pickedFile != null) {
+                    Navigator.pop(dialogContext); // Tutup dialog
+                    _uploadProofToServer(File(pickedFile.path));
+                  }
+                },
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('Batal'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _uploadProofToServer(File imageFile) async {
+    LoadingOverlay().show(context);
+    try {
+      final url = Uri.parse(Constant.baseurl + 'upload_payment_proof');
+      var request = http.MultipartRequest('POST', url);
+      
+      // Mengirimkan token jika ada auth middleware. Di sini asumsinya token ditambahkan di headers
+      // Jika diperlukan, tambahkan userId dsb. Tetapi di Laravel backend kita meminta `transaction_id`.
+      request.fields['transaction_id'] = paymentProvider.paymentId ?? '';
+      
+      var multipartFile = await http.MultipartFile.fromPath('payment_proof', imageFile.path);
+      request.files.add(multipartFile);
+
+      var response = await request.send();
+      var responseData = await response.stream.bytesToString();
+
+      LoadingOverlay().hide();
+
+      if (response.statusCode == 200) {
+        if (!mounted) return;
+        Utils.showToast('Berhasil! Menunggu verifikasi admin.');
+        
+        isPaymentDone = true;
+        await profileProvider.getProfile(context);
+
+        if (!mounted) return;
+        if (kIsWeb) {
+          if (context.canPop()) {
+            context.pop(isPaymentDone);
+          }
+          context.pushReplacementNamed(RoutesConstant.homePage);
+        } else {
+          await bottombarProvider.setBottomNavIndex(0);
+          if (!mounted) return;
+          Utils.redirectToMainPage(context: context);
+        }
+      } else {
+        if (!mounted) return;
+        Utils.showToast('Gagal mengunggah bukti pembayaran.');
+      }
+    } catch (e) {
+      LoadingOverlay().hide();
+      print("Error Upload: $e");
     }
   }
 
@@ -1320,6 +1409,9 @@ class AllPaymentState extends State<AllPayment>
       }
       if (result.cash?.visibility == "1") {
         gateways.add(const _GatewayItem("cash", "pg_cash.png", "Cash"));
+      }
+      if (result.manual?.visibility == "1") {
+        gateways.add(const _GatewayItem("manual", "pg_cash.png", "Manual Transfer"));
       }
     }
 
