@@ -42,6 +42,7 @@ import '../model/subtitlemodel.dart';
 import '../pages/bottombar.dart';
 import '../pages/loginsocial.dart';
 import '../pages/contentvideodetails.dart';
+import '../pages/contentlivetvdetails.dart';
 import '../players/player_vdocipher.dart';
 import '../players/player_video.dart';
 import '../players/player_vimeo.dart';
@@ -770,6 +771,13 @@ class Utils {
           () => ContentShowDetails(videoId, subVideoType, videoType, typeId),
         );
         break;
+
+      case 9:
+        videoDetailsProvider.setLoading(true);
+        await navigateTo(
+          () => ContentLiveTvDetails(videoId, subVideoType, videoType, typeId),
+        );
+        break;
     }
   }
 
@@ -876,6 +884,13 @@ class Utils {
         showDetailsProvider.setLoading(true);
         await navigateTo(
           () => ContentShowDetails(videoId, subVideoType, videoType, typeId),
+        );
+        break;
+
+      case 9:
+        videoDetailsProvider.setLoading(true);
+        await navigateTo(
+          () => ContentLiveTvDetails(videoId, subVideoType, videoType, typeId),
         );
         break;
     }

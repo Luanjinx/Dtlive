@@ -1,35 +1,38 @@
 import 'package:flutter/material.dart';
-import '../model/livetvmodel.dart' as livetv;
+import '../model/sectionlistmodel.dart' as list;
 import '../webservice/apiservices.dart';
 import '../utils/utils.dart';
 
 class LiveTvProvider extends ChangeNotifier {
-  livetv.LiveTvModel liveTvModel = livetv.LiveTvModel();
-  List<livetv.Result>? liveTvList = [];
+  list.SectionListModel sectionListModel = list.SectionListModel();
+  List<list.Result>? sectionList = [];
 
   bool loadingSection = false;
+  int? cSectionIndex = 0;
 
   Future<void> getLiveTvList() async {
     loadingSection = true;
-    liveTvModel = livetv.LiveTvModel();
+    sectionListModel = list.SectionListModel();
     try {
-      liveTvModel = await ApiService().getLiveTv();
-      printLog("getLiveTvList message :==> ${liveTvModel.message}");
+      sectionListModel = await ApiService().sectionList(9, 2, 1);
+      printLog("getLiveTvList message :==> ${sectionListModel.message}");
 
-      liveTvList?.clear();
-      liveTvList = [];
-      if (liveTvModel.status == 200) {
-        if (liveTvModel.result != null &&
-            (liveTvModel.result?.length ?? 0) > 0) {
-          for (var i = 0; i < (liveTvModel.result?.length ?? 0); i++) {
-            liveTvList?.add(liveTvModel.result?[i] ?? livetv.Result());
+      if (sectionListModel.status == 200) {
+        if (sectionListModel.result != null &&
+            (sectionListModel.result?.length ?? 0) > 0) {
+          if (sectionList != null && sectionList!.isNotEmpty) {
+            sectionList?.clear();
+            sectionList = [];
           }
-          final Map<String, livetv.Result> postMap = {};
-          liveTvList?.forEach((item) {
-            final key = '${item.id}-${item.categoryId}';
-            postMap[key] = item;
+          for (var i = 0; i < (sectionListModel.result?.length ?? 0); i++) {
+            sectionList?.add(sectionListModel.result?[i] ?? list.Result());
+          }
+
+          final Map<String, list.Result> postMap = {};
+          sectionList?.forEach((item) {
+            postMap[item.id.toString()] = item;
           });
-          liveTvList = postMap.values.toList();
+          sectionList = postMap.values.toList();
         }
       }
     } catch (e) {
@@ -41,9 +44,9 @@ class LiveTvProvider extends ChangeNotifier {
   }
 
   void clearProvider() {
-    liveTvModel = livetv.LiveTvModel();
-    liveTvList?.clear();
-    liveTvList = [];
+    sectionListModel = list.SectionListModel();
+    sectionList?.clear();
+    sectionList = [];
     loadingSection = false;
   }
 }

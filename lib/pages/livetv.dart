@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:responsive_grid_list/responsive_grid_list.dart';
 
 import '../provider/livetvprovider.dart';
 import '../utils/color.dart';
 import '../utils/constant.dart';
 import '../utils/dimens.dart';
 import '../utils/utils.dart';
-import '../widget/mynetworkimg.dart';
 import '../widget/mytext.dart';
 import '../widget/nodata.dart';
 import '../shimmer/shimmerutils.dart';
 import '../routes/routes_constant.dart';
+import '../widget/content_section_widget.dart';
+import '../model/sectionlistmodel.dart' as list;
 
 class LiveTV extends StatefulWidget {
   const LiveTV({super.key});
@@ -50,14 +50,20 @@ class _LiveTVState extends State<LiveTV> {
       body: SafeArea(
         child: Consumer<LiveTvProvider>(
           builder: (context, provider, child) {
-            if (provider.loadingSection && provider.liveTvList!.isEmpty) {
-              return ShimmerUtils.responsiveGrid(
-                  context, Dimens.heightLand, Dimens.widthLand, 2, 8);
+            if (provider.loadingSection && provider.sectionList!.isEmpty) {
+              return ListView.builder(
+                itemCount: 5,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (BuildContext context, int index) {
+                  return ShimmerUtils.setHomeSections(context, "landscape");
+                },
+              );
             }
 
-            if (provider.liveTvList != null &&
-                provider.liveTvList!.isNotEmpty) {
-              return _buildLiveTvGrid(provider);
+            if (provider.sectionList != null &&
+                provider.sectionList!.isNotEmpty) {
+              return _buildSections(provider);
             } else {
               return const NoData(
                   title: 'nodata', subTitle: 'no_live_tv_available');
@@ -68,7 +74,7 @@ class _LiveTVState extends State<LiveTV> {
     );
   }
 
-  Widget _buildLiveTvGrid(LiveTvProvider provider) {
+  Widget _buildSections(LiveTvProvider provider) {
     return RefreshIndicator(
       backgroundColor: white,
       color: colorPrimary,
@@ -76,72 +82,99 @@ class _LiveTVState extends State<LiveTV> {
       onRefresh: () async {
         await provider.getLiveTvList();
       },
-      child: SingleChildScrollView(
+      child: ListView.builder(
+        itemCount: provider.sectionList?.length ?? 0,
+        shrinkWrap: true,
+        padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
         physics: const AlwaysScrollableScrollPhysics(),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 15),
-          child: ResponsiveGridList(
-            minItemWidth: Dimens.widthLand,
-            verticalGridSpacing: 8,
-            horizontalGridSpacing: 8,
-            minItemsPerRow: Dimens.isBigScreen(context) ? 4 : 2,
-            maxItemsPerRow: 8,
-            listViewBuilderOptions: ListViewBuilderOptions(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-            ),
-            children: List.generate(
-              provider.liveTvList?.length ?? 0,
-              (index) {
-                final item = provider.liveTvList![index];
-                return InkWell(
-                  borderRadius: BorderRadius.circular(4),
-                  onTap: () {
-                    // Navigate to video player or details
-                    // Currently Live TV doesn't have a specific details page, maybe open player directly?
-                    Utils.openDetails(
-                      context: context,
-                      videoId: item.id ?? 0,
-                      subVideoType: 0,
-                      videoType: 9,
-                      typeId: item.categoryId ?? 0,
-                      newPage: RoutesConstant.contentDetailsPage,
-                      oldPage: "LiveTV",
-                      reqText: "",
-                    );
-                  },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(4),
-                        child: MyNetworkImage(
-                          imageUrl: item.landscapeThumbnail ?? "",
-                          fit: BoxFit.cover,
-                          height: Dimens.heightLand,
-                          width: MediaQuery.of(context).size.width,
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      MyText(
-                        color: white,
-                        text: item.name ?? "",
-                        textalign: TextAlign.start,
-                        fontsizeNormal: 14,
-                        fontweight: FontWeight.w500,
-                        fontsizeWeb: 15,
-                        maxline: 1,
-                        overflow: TextOverflow.ellipsis,
-                        fontstyle: FontStyle.normal,
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
+        itemBuilder: (BuildContext context, int index) {
+          final section = provider.sectionList![index];
+          if (section.data != null && (section.data?.length ?? 0) > 0) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildTitle(section),
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: getRemainingDataHeight(section.screenLayout ?? ""),
+                  child: setSectionData(section),
+                ),
+                const SizedBox(height: 25),
+              ],
+            );
+          } else {
+            return const SizedBox.shrink();
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildTitle(list.Result section) {
+    return FittedBox(
+      child: Container(
+        padding: const EdgeInsets.only(left: 13, right: 13),
+        child: MyText(
+          color: white,
+          text: section.title ?? "",
+          textalign: TextAlign.center,
+          fontsizeNormal: 15,
+          fontweight: FontWeight.w600,
+          fontsizeWeb: 16,
+          multilanguage: false,
+          maxline: 1,
+          overflow: TextOverflow.ellipsis,
+          fontstyle: FontStyle.normal,
         ),
       ),
+    );
+  }
+
+  double getRemainingDataHeight(String layoutType) {
+    if (layoutType == "landscape" || layoutType == "index_landscape") {
+      return Dimens.heightLand;
+    } else if (layoutType == "big_landscape") {
+      return Dimens.heightLandBig;
+    } else if (layoutType == "portrait" || layoutType == "index_portrait") {
+      return Dimens.heightPort;
+    } else if (layoutType == "big_portrait") {
+      return Dimens.heightPortBig;
+    } else if (layoutType == "square") {
+      return Dimens.heightSquare;
+    } else {
+      return Dimens.heightLand;
+    }
+  }
+
+  Widget setSectionData(list.Result section) {
+    final layoutType = section.screenLayout ?? "";
+    ContentCardLayout layout = ContentCardLayout.landscape;
+    if (layoutType == "big_landscape") layout = ContentCardLayout.bigLandscape;
+    if (layoutType == "index_landscape") layout = ContentCardLayout.indexLandscape;
+    if (layoutType == "portrait") layout = ContentCardLayout.portrait;
+    if (layoutType == "big_portrait") layout = ContentCardLayout.bigPortrait;
+    if (layoutType == "index_portrait") layout = ContentCardLayout.indexPortrait;
+    if (layoutType == "square") layout = ContentCardLayout.square;
+
+    return ContentSectionWidget(
+      items: section.data,
+      layout: layout,
+      showScrollArrows: false,
+      horizontalPadding: 14,
+      onItemTap: (datum, index) {
+        Utils.openDetails(
+          context: context,
+          videoId: datum.id ?? 0,
+          subVideoType: datum.subVideoType ?? 0,
+          videoType: datum.videoType ?? 0,
+          typeId: section.typeId ?? 0,
+          newPage: RoutesConstant.contentDetailsPage,
+          oldPage: "LiveTV",
+          reqText: "",
+        );
+      },
     );
   }
 }
