@@ -56,6 +56,7 @@ import '../provider/videobyidprovider.dart';
 import '../provider/videodetailsprovider.dart';
 import '../provider/referandearnhistoryprovider.dart';
 import '../provider/walletprovider.dart';
+import '../provider/livetvprovider.dart';
 import '../provider/viewallprovider.dart';
 import '../provider/reviewprovider.dart';
 import '../provider/watchlistprovider.dart';
@@ -192,6 +193,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => WatchlistProvider()),
         ChangeNotifierProvider(create: (_) => ReferEarnHistoryProvider()),
         ChangeNotifierProvider(create: (_) => WalletProvider()),
+        ChangeNotifierProvider(create: (_) => LiveTvProvider()),
       ],
       child: const MyApp(),
     ),

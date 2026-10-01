@@ -9,6 +9,7 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import '../pages/rentstore.dart';
 import '../pages/clips.dart';
+import '../pages/livetv.dart';
 
 import '../main.dart';
 import '../pages/find.dart';
@@ -205,6 +206,7 @@ class BottombarState extends State<Bottombar> with RouteAware {
       widgetOptions = <Widget>[
         const Home(pageName: ""),
         const Find(viewFrom: ""),
+        const LiveTV(),
         if (Constant.userIsKid == false)
           const Clips(clipId: 0, openFrom: "bottom"),
         if (rentMenuStatus != null &&
@@ -213,6 +215,7 @@ class BottombarState extends State<Bottombar> with RouteAware {
           const RentStore(),
         const MySpace(),
       ];
+
       printLog('_getData widgetOptions ===> ${widgetOptions.length}');
 
       if (!mounted) return;
@@ -332,6 +335,21 @@ class BottombarState extends State<Bottombar> with RouteAware {
                         title: "bottommenu2",
                         isTitleMultilang: true,
                         iconName: 'ic_find',
+                        iconColor: defaultIconColor,
+                      ),
+                    ),
+                    BottomNavigationBarItem(
+                      label: "",
+                      activeIcon: _buildBottomNavIcon(
+                        title: "Live TV",
+                        isTitleMultilang: false,
+                        iconName: 'ic_tv',
+                        iconColor: colorPrimary,
+                      ),
+                      icon: _buildBottomNavIcon(
+                        title: "Live TV",
+                        isTitleMultilang: false,
+                        iconName: 'ic_tv',
                         iconColor: defaultIconColor,
                       ),
                     ),

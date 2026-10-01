@@ -2929,15 +2929,24 @@ class _PlayerVideoState extends State<PlayerVideo>
       transitionDuration: const Duration(milliseconds: 300),
       pageBuilder: (context, animation, secondaryAnimation) {
         return Align(
-          alignment: Alignment.center,
+          alignment: Alignment.centerLeft,
           child: Material(
             color: transparent,
             child: Container(
-              width: 320,
-              height: MediaQuery.of(context).size.height > 500 ? 450 : MediaQuery.of(context).size.height * 0.8,
+              width: 280,
+              height: MediaQuery.of(context).size.height,
               decoration: BoxDecoration(
-                color: lightBlack,
-                borderRadius: BorderRadius.circular(16),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    colorAccent.withValues(alpha: 0.35),
+                    lightBlack,
+                    lightBlack,
+                  ],
+                  stops: const [0.0, 0.3, 1.0],
+                ),
+                borderRadius: const BorderRadius.horizontal(right: Radius.circular(16)),
               ),
               child: StatefulBuilder(
                 builder: (context, setStateSB) {
@@ -2953,7 +2962,7 @@ class _PlayerVideoState extends State<PlayerVideo>
                             MyText(
                               color: white,
                               text: "Settings",
-                              multilanguage: true,
+                              multilanguage: false,
                               fontsizeNormal: 18,
                               fontsizeWeb: 18,
                               fontweight: FontWeight.w700,
@@ -2994,7 +3003,7 @@ class _PlayerVideoState extends State<PlayerVideo>
                                 child: MyText(
                                   color: isSelected ? colorAccent : white.withValues(alpha: 0.54),
                                   text: tabs[index],
-                                  multilanguage: true,
+                                  multilanguage: false,
                                   fontsizeNormal: 15,
                                   fontsizeWeb: 15,
                                   fontweight: isSelected ? FontWeight.w600 : FontWeight.w500,
@@ -3021,12 +3030,12 @@ class _PlayerVideoState extends State<PlayerVideo>
         );
       },
       transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return FadeTransition(
-          opacity: animation,
-          child: ScaleTransition(
-            scale: Tween<double>(begin: 0.95, end: 1.0).animate(animation),
-            child: child,
-          ),
+        return SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(-1, 0),
+            end: Offset.zero,
+          ).animate(animation),
+          child: child,
         );
       },
     ).then((_) {

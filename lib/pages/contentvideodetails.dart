@@ -599,26 +599,18 @@ class ContentVideoDetailsState extends State<ContentVideoDetails>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildRatingReviewCard(),
-                      if (widget.videoType == Constant.liveTvContentType || 
-                          widget.videoType == Constant.channelContentType || 
-                          widget.videoType == Constant.channelType)
-                        _buildLiveTvRecommendations(videoDetailsProvider)
-                      else
-                        RelatedVideoShow(
-                          relatedDataList:
-                              videoDetailsProvider.relatedContentModel.result,
-                          newPage: '',
-                          oldPage: '',
-                          reqText: '',
-                          videoId: widget.videoId,
-                          subVideoType: widget.subVideoType,
-                          videoType: widget.videoType,
-                          typeId: widget.typeId,
-                        ),
-                      if (!(widget.videoType == Constant.liveTvContentType || 
-                            widget.videoType == Constant.channelContentType || 
-                            widget.videoType == Constant.channelType)) ...[
-                        CastCrew(
+                      RelatedVideoShow(
+                        relatedDataList:
+                            videoDetailsProvider.relatedContentModel.result,
+                        newPage: '',
+                        oldPage: '',
+                        reqText: '',
+                        videoId: widget.videoId,
+                        subVideoType: widget.subVideoType,
+                        videoType: widget.videoType,
+                        typeId: widget.typeId,
+                      ),
+                      CastCrew(
                           castList: videoDetailsProvider
                               .contentDetailModel
                               .result?[0]
@@ -626,7 +618,6 @@ class ContentVideoDetailsState extends State<ContentVideoDetails>
                           newPage: '',
                         ),
                         _buildDirector(),
-                      ],
                     ],
                   );
                 },
