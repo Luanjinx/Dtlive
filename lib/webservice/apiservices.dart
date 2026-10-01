@@ -45,6 +45,10 @@ import '../model/contentdetailmodel.dart' as contentdetails;
 import '../model/episodebyseasonmodel.dart' as episode;
 import '../model/clipepisodesmodel.dart' as shortsepisode;
 import '../model/sectionlistmodel.dart';
+import '../model/livetvmodel.dart';
+
+import '../model/livetvmodel.dart';
+
 import '../model/sectiontypemodel.dart';
 import '../model/reviewmodel.dart';
 import '../model/successmodel.dart';
@@ -704,9 +708,25 @@ class ApiService {
         'page_no': pageNo,
       },
     );
-    dataModel = SectionListModel.fromJson(response.data);
-    return dataModel;
-  }
+      dataModel = SectionListModel.fromJson(response.data);
+      return dataModel;
+    }
+
+    // get_live_tv API
+    Future<LiveTvModel> getLiveTv() async {
+      LiveTvModel dataModel;
+      String apiName = "get_live_tv";
+      Response response = await dio.post(
+        apiName,
+        options: optHeaders,
+        data: {
+          'user_id': (Constant.userID == null) ? 0 : Constant.userID,
+          'device_id': Constant.currentDeviceId,
+        },
+      );
+      dataModel = LiveTvModel.fromJson(response.data);
+      return dataModel;
+    }
 
   // section_detail API
   Future<SectionDetailModel> sectionDetails(dynamic sectionId, pageNo) async {
